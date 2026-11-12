@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>LarkShinnn</title>
+  <meta name="description" content="LarkShinnn — PPC malder in Punishing: Gray Raven, AMV editor, and developer. An explorable map of Snezhnaya." />
+  <meta name="theme-color" content="#09080d" />
+  <meta property="og:title" content="LarkShinnn" />
+  <meta property="og:description" content="Died in PPC. Got up. Retry. Even Ronova is tired of keeping count." />
+  <meta property="og:type" content="profile" />
+  <meta property="og:image" content="assets/img/og.jpg" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://api.huaxu.app" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Manrope:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="on-title">
+  <a class="skip" href="#dock">Skip to sections</a>
+
+  <!-- ============ WORLD (map) ============ -->
+  <div class="world" data-world aria-hidden="true">
+    <div class="camera" data-camera>
+      <svg class="map" data-map xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="pois" data-pois></div>
+      <div class="player" data-player>
+        <span class="player__ring"></span>
+        <svg class="player__body" viewBox="-20 -20 40 40" aria-hidden="true">
+          <path class="player__dir" d="M0 -19 L6 -9 L0 -11.5 L-6 -9Z" />
+          <polygon class="player__star" points="0.00,-10.00 1.74,-3.60 7.82,-6.23 3.90,-0.89 9.75,2.23 3.13,2.49 4.34,9.01 0.00,4.00 -4.34,9.01 -3.13,2.49 -9.75,2.23 -3.90,-0.89 -7.82,-6.23 -1.74,-3.60" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <canvas class="feathers" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- ============ HUD ============ -->
+  <header class="hud-id" data-hud>
+    <button class="hud-id__avatar" type="button" data-open="profile" aria-label="Open profile">
+      <img data-live-avatar src="assets/pgr/avatar.webp" alt="" width="256" height="256" />
+      <img class="hud-id__frame" data-live-frame src="assets/pgr/frame.webp" alt="" width="256" height="256" />
+    </button>
+    <div class="hud-id__text">
+      <p class="hud-id__name">LarkShinnn</p>
+      <div class="hud-id__lv">
+        <span class="hud-id__tag">CL <b data-live-level>120</b></span>
+        <span class="hud-id__bar"><i data-live-levelbar></i></span>
+      </div>
+      <p class="hud-id__sync" data-sync><span class="dot"></span><span data-sync-text>Connecting to Huaxu</span></p>
+    </div>
+  </header>
+
+  <div class="compass" data-hud aria-hidden="true">
+    <svg viewBox="-60 -60 120 120">
+      <circle r="56" class="c-ring" />
+      <circle r="47" class="c-ticks" />
+      <text y="-34" class="c-n">N</text>
+      <g data-needle>
+        <path class="c-lid" d="M-24 0 Q0 -17 24 0 Q0 17 -24 0Z" />
+        <polygon class="c-star" points="0.00,-8.00 1.39,-2.88 6.25,-4.99 3.12,-0.71 7.80,1.78 2.50,1.99 3.47,7.21 0.00,3.20 -3.47,7.21 -2.50,1.99 -7.80,1.78 -3.12,-0.71 -6.25,-4.99 -1.39,-2.88" />
+        <path class="c-needle" d="M0 -44 L4 -30 L-4 -30Z" />
+      </g>
+    </svg>
+    <p class="compass__place" data-place>Requiem Square</p>
+  </div>
+
+  <div class="prompt" data-prompt role="status" aria-live="polite">
+    <kbd>E</kbd><span data-prompt-text>Enter</span>
+  </div>
+
+  <p class="hint" data-hud>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2" /><path d="M6 10h1M10 10h1M14 10h1M18 10h0M7 14h10" /></svg>
+    <span data-hint-desktop>WASD to move · E to enter · 1–8 sections · Esc back</span>
+    <span data-hint-touch>Tap the map to walk · tap a place to enter</span>
+  </p>
+
+  <nav class="dock" id="dock" aria-label="Sections" data-hud>
+    <button class="dock__btn dock__btn--world is-active" type="button" data-world-btn aria-label="World map">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z" /><path d="M9 4v14M15 6v14" /></svg>
+      <span>World</span>
+    </button>
+    <!-- section buttons injected from POIS -->
+  </nav>
+
+  <!-- ============ TITLE SCREEN ============ -->
+  <section class="title-screen" data-title aria-labelledby="hero-title">
+    <svg class="sigil" viewBox="-400 -400 800 800" aria-hidden="true">
+      <defs>
+        <path id="ring-path" d="M0,0 m-300,0 a300,300 0 1,1 600,0 a300,300 0 1,1 -600,0" />
+        <linearGradient id="feather-grad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#3a0c15" />
+          <stop offset=".55" stop-color="#8e2433" />
+          <stop offset="1" stop-color="#c24253" />
+        </linearGradient>
+      </defs>
+      <g class="sigil__ring">
+        <circle r="330" class="s-thin" />
+        <circle r="314" class="s-dash" />
+        <text class="s-text"><textPath href="#ring-path">ASMODAY · ISTAROTH · <tspan class="s-red">RONOVA</tspan> · NABERIUS · ASMODAY · ISTAROTH · <tspan class="s-red">RONOVA</tspan> · NABERIUS · ASMODAY ·</textPath></text>
+      </g>
+      <g class="wing wing--l" data-wing></g>
+      <g class="wing wing--r" data-wing></g>
+      <g class="eye">
+        <path class="eye__lid" d="M-150 0 Q0 -104 150 0 Q0 104 -150 0Z" />
+        <g class="eye__look" data-look>
+          <circle r="58" class="eye__iris" />
+          <circle r="44" class="s-faint" />
+          <polygon class="eye__pupil" points="0.00,-30.00 5.21,-10.81 23.45,-18.70 11.70,-2.67 29.25,6.68 9.38,7.48 13.02,27.03 0.00,12.00 -13.02,27.03 -9.38,7.48 -29.25,6.68 -11.70,-2.67 -23.45,-18.70 -5.21,-10.81" />
+        </g>
+      </g>
+    </svg>
+
+    <div class="title-screen__inner">
+      <h1 class="hero__title" id="hero-title" aria-label="LarkShinnn">
+        <span class="line" data-split>Lark</span>
+        <span class="line line--indent" data-split>Shinnn</span>
+      </h1>
+      <p class="hero__lede">Died in PPC. Got up. Retry.<br /><em>Even Ronova is tired of keeping count.</em></p>
+      <ul class="roles" aria-label="Roles">
+        <li><span class="roles__k">PGR</span>PPC Malder</li>
+        <li><span class="roles__k">Edit</span>AMV Editor</li>
+        <li><span class="roles__k">Code</span>Developer</li>
+      </ul>
+      <button class="enter" type="button" data-enter>
+        <span>Enter Snezhnaya</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+      </button>
+    </div>
+    <p class="title-screen__legal">Fan-made. Punishing: Gray Raven © Kuro Games · Genshin Impact © HoYoverse · Not affiliated.</p>
+  </section>
+
+  <!-- ============ PANELS ============ -->
+  <div class="scrim" data-scrim hidden></div>
+
+  <!-- PROFILE -->
+  <section class="panel" id="panel-profile" data-panel="profile" role="dialog" aria-modal="true" aria-labelledby="t-profile" hidden>
+    <header class="panel__head">
+      <div>
+        <h2 class="panel__title" id="t-profile">PPC Malder<span class="dot">.</span></h2>
+      </div>
+      <button class="panel__close" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" /></svg></button>
+    </header>
+    <div class="panel__body">
+      <div class="malder">
+        <div class="malder__text">
+          <p class="deck"><strong>Malding</strong> is <em>mad</em> plus <em>balding</em>: getting so angry your hair falls out. That is me every time Phantom Pain Cage resets.</p>
+          <p class="body">My main game is Punishing: Gray Raven, where I go by <strong data-live-name>夜’ Ronova</strong>. Most of my hours go into PPC: memorising boss patterns, reworking rotations, losing by two seconds, and running it back.</p>
+          <ul class="roles roles--panel" aria-label="Roles">
+            <li><span class="roles__k">PGR</span>PPC Malder</li>
+            <li><span class="roles__k">Edit</span>AMV Editor</li>
+            <li><span class="roles__k">Code</span>Developer</li>
+          </ul>
+        </div>
+
+        <article class="card" aria-label="PGR profile">
+          <div class="card__top">
+            <div class="avatar">
+              <img data-live-avatar src="assets/pgr/avatar.webp" alt="PGR profile avatar" width="256" height="256" />
+              <img class="avatar__frame" data-live-frame src="assets/pgr/frame.webp" alt="" width="256" height="256" />
+            </div>
+            <div class="card__id">
+              <p class="card__name" data-live-name>夜’ Ronova</p>
+              <p class="card__sign" data-live-sign>“kiwi”</p>
+              <img class="card__badge" data-live-badge src="assets/pgr/badge.webp" alt="Equipped nameplate" width="198" height="70" />
+            </div>
+          </div>
+          <dl class="card__stats">
+            <div><dt>Commandant Lv</dt><dd data-live-level>120</dd></div>
+            <div><dt>Guild</dt><dd data-live-guild>Karuhun 夜</dd></div>
+            <div><dt>Character rating</dt><dd data-live-rating>125,255</dd></div>
+            <div><dt>Frames owned</dt><dd data-live-owned>—</dd></div>
+          </dl>
+          <div class="card__foot">
+            <span class="card__sync" data-sync-card>Snapshot · 12 Nov 2026</span>
+            <a class="card__link" href="https://huaxu.app/ap/players/26438993/characters" target="_blank" rel="noopener noreferrer">Huaxu <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEST RUNS -->
+  <section class="panel panel--wide" id="panel-runs" data-panel="runs" role="dialog" aria-modal="true" aria-labelledby="t-runs" hidden>
+    <header class="panel__head">
+      <div>
+        <h2 class="panel__title" id="t-runs">Best Runs<span class="dot">.</span></h2>
+      </div>
+      <button class="panel__close" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" /></svg></button>
+    </header>
+    <div class="panel__body">
+      <p class="deck deck--side">Every week I made the top 100 on the AP server, ranked by score. Top three per mode. The proof that the hair loss was not for nothing.</p>
+      <div class="runs" data-runs></div>
+      <p class="note" data-runs-note>Top 100 rankings from Huaxu, scanned back to the oldest week available.</p>
+    </div>
+  </section>
+
+  <!-- FAV TEAM -->
+  <section class="panel panel--wide" id="panel-team" data-panel="team" role="dialog" aria-modal="true" aria-labelledby="t-team" hidden>
+    <header class="panel__head">
+      <div>
+        <h2 class="panel__title" id="t-team">Fav Team<span class="dot">.</span></h2>
+      </div>
+      <div class="squad-tabs" role="tablist" aria-label="Choose a team" data-squad-tabs></div>
+      <button class="panel__close" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" /></svg></button>
+    </header>
+    <div class="panel__body">
+      <div class="squad" role="tabpanel" data-squad aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- LEDGER -->
+  <section class="panel" id="panel-ledger" data-panel="ledger" role="dialog" aria-modal="true" aria-labelledby="t-ledger" hidden>
+    <header class="panel__head">
+      <div>
+        <h2 class="panel__title" id="t-ledger">Death Ledger<span class="dot">.</span></h2>
+      </div>
+      <button class="panel__close" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" /></svg></button>
+    </header>
+    <div class="panel__body">
+      <p class="deck">Your turn. Every time you lose a PPC run, press the button. Ronova keeps the count.</p>
+      <div class="tally" data-tally aria-hidden="true"></div>
+      <div class="ledger__foot">
+        <p class="ledger__count"><span data-deaths>0</span> retries · <em data-verdict>Nobody has died yet. Suspicious.</em></p>
+        <div class="ledger__btns">
+          <button class="btn btn--blood" type="button" data-retry>Retry</button>
+          <button class="btn btn--ghost" type="button" data-reset>Clear the ledger</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AMV -->
+  <section class="panel panel--wide" id="panel-amv" data-panel="amv" role="dialog" aria-modal="true" aria-labelledby="t-amv" hidden>
+    <header class="panel__head">
+      <div>
+        <h2 class="panel__title" id="t-amv">AMV<span class="dot">.</span></h2>
+      </div>
+      <button class="panel__close" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" /></svg></button>
+    </header>
+    <div class="panel__body amv">
+      <div>
+        <p class="deck">Sometimes I edit AMVs. Cut, sync to the beat, nudge one frame, render, repeat until 3 a.m.</p>
+        <div class="amv__links">
+          <a class="btn btn--line" href="https://www.youtube.com/@larkshinnn6630" target="_blank" rel="noopener noreferrer">YouTube <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a>
+          <a class="btn btn--line" href="https://www.tiktok.com/@larkshinnn" target="_blank" rel="noopener noreferrer">TikTok <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a>
+        </div>
+      </div>
+      <div class="timeline" data-timeline aria-hidden="true">
+        <div class="timeline__bar">
+          <span class="timeline__tc" data-tc>00:00:00:00</span>
+          <span class="timeline__seq">seq_ppc_final_v7_FINAL2</span>
+        </div>
+        <div class="timeline__ruler" data-ruler></div>
+        <div class="timeline__tracks">
+          <div class="track"><span class="track__k">V2</span>
+            <div class="track__lane">
+              <i class="clip clip--fx" style="--x:8%;--w:9%">flash</i>
+              <i class="clip clip--fx" style="--x:38%;--w:6%">glow</i>
+              <i class="clip clip--fx" style="--x:71%;--w:12%">shake</i>
+            </div>
+          </div>
+          <div class="track"><span class="track__k">V1</span>
+            <div class="track__lane">
+              <i class="clip" style="--x:0%;--w:17%">luna_ult.mp4</i>
+              <i class="clip" style="--x:17%;--w:14%">kurumi_qte.mp4</i>
+              <i class="clip" style="--x:31%;--w:21%">adelyde_burst.mp4</i>
+              <i class="clip" style="--x:52%;--w:11%">nirvatia.mp4</i>
+              <i class="clip" style="--x:63%;--w:22%">ppc_clear.mp4</i>
+              <i class="clip" style="--x:85%;--w:15%">outro.mp4</i>
+            </div>
+          </div>
+          <div class="track track--audio"><span class="track__k">A1</span>
+            <div class="track__lane"><svg class="wave" data-wave preserveAspectRatio="none"></svg></div>
+          </div>
+          <span class="playhead" data-playhead></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEVELOPER -->
+  <section class="panel" id="panel-dev" data-panel="dev" role="dialog" aria-modal="true" aria-labelledby="t-dev" hidden>
+    <header class="panel__head">
+      <div>
+        <h2 class="panel__title" id="t-dev">Developer<span class="dot">.</span></h2>
+      </div>
+      <button class="panel__close" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" /></svg></button>
+    </header>
+    <div class="panel__body">
+      <p class="deck">Outside the game, I write code. Tools, local servers, dashboards. The public ones live on GitHub.</p>
+      <ul class="repos" data-repos aria-label="Public repositories">
+        <li><a href="https://github.com/Larkshinnn/eos-gm-tool" target="_blank" rel="noopener noreferrer"><span class="repos__name">eos-gm-tool</span><span class="repos__lang"><i style="--c:#e8d36b"></i>JavaScript</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a></li>
+        <li><a href="https://github.com/Larkshinnn/qa-report" target="_blank" rel="noopener noreferrer"><span class="repos__name">qa-report</span><span class="repos__lang"><i style="--c:#5fbf8f"></i>Vue</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a></li>
+        <li><a href="https://github.com/Larkshinnn/EOSGameLocalSRVR" target="_blank" rel="noopener noreferrer"><span class="repos__name">EOSGameLocalSRVR</span><span class="repos__lang"><i style="--c:#e0734f"></i>HTML</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a></li>
+      </ul>
+      <a class="btn btn--line" href="https://github.com/Larkshinnn" target="_blank" rel="noopener noreferrer">github.com/Larkshinnn <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a>
+    </div>
+  </section>
+
+  <!-- TEYVAT -->
+  <section class="panel panel--wide" id="panel-teyvat" data-panel="teyvat" role="dialog" aria-modal="true" aria-labelledby="t-teyvat" hidden>
+    <header class="panel__head">
+      <div>
+        <h2 class="panel__title" id="t-teyvat">Teyvat<span class="dot">.</span></h2>
+      </div>
+      <button class="panel__close" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" /></svg></button>
+    </header>
+    <div class="panel__body">
+      <p class="deck deck--side">A side quest. In Genshin I'm Adelyde on the Asia server, and somehow almost every team ends up Cryo.</p>
+      <div class="stage">
+        <p class="stage__ghost" aria-hidden="true" data-ghost>Skirk</p>
+        <div class="stage__roster" role="tablist" aria-label="Choose a Genshin character" data-roster></div>
+        <figure class="stage__art">
+          <div class="stage__halo" aria-hidden="true"></div>
+          <img data-art src="assets/img/gacha_SkirkNew.webp" alt="" width="2048" height="1024" decoding="async" />
+        </figure>
+        <div class="stage__panel" role="tabpanel" data-gpanel aria-live="polite"></div>
+      </div>
+      <dl class="strip">
+        <div><dt>Adventure Rank</dt><dd>55</dd></div>
+        <div><dt>World Level</dt><dd>8</dd></div>
+        <div><dt>Spiral Abyss</dt><dd>11-3 <small>27 stars</small></dd></div>
+        <div><dt>Achievements</dt><dd>660</dd></div>
+        <div><dt>UID</dt><dd><button class="uid" type="button" data-copy="1819302566" aria-label="Copy Genshin UID 1819302566">1819302566
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="1" /><path d="M16 8V4H4v12h4" /></svg></button></dd></div>
+      </dl>
+      <p class="note">Data from Enka.Network, 12 Nov 2026.</p>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="panel" id="panel-contact" data-panel="contact" role="dialog" aria-modal="true" aria-labelledby="t-contact" hidden>
+    <header class="panel__head">
+      <div>
+        <h2 class="panel__title" id="t-contact">Contact<span class="dot">.</span></h2>
+      </div>
+      <button class="panel__close" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" /></svg></button>
+    </header>
+    <div class="panel__body">
+      <ul class="roll">
+        <li><a href="https://www.tiktok.com/@larkshinnn" target="_blank" rel="noopener noreferrer"><span class="roll__t">TikTok</span><span class="roll__d">@larkshinnn · PGR &amp; PPC</span><svg class="roll__a" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a></li>
+        <li><a href="https://www.youtube.com/@larkshinnn6630" target="_blank" rel="noopener noreferrer"><span class="roll__t">YouTube</span><span class="roll__d">AMVs &amp; longer videos</span><svg class="roll__a" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a></li>
+        <li><a href="https://github.com/Larkshinnn" target="_blank" rel="noopener noreferrer"><span class="roll__t">GitHub</span><span class="roll__d">code &amp; tools</span><svg class="roll__a" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a></li>
+        <li><a href="https://huaxu.app/ap/players/26438993/characters" target="_blank" rel="noopener noreferrer"><span class="roll__t">Huaxu</span><span class="roll__d">full PGR profile</span><svg class="roll__a" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a></li>
+        <li><a href="https://enka.network/u/1819302566/" target="_blank" rel="noopener noreferrer"><span class="roll__t">Enka</span><span class="roll__d">Genshin builds</span><svg class="roll__a" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a></li>
+      </ul>
+      <div class="foot__row">
+        <p>You've been here for <span class="mono" data-stay>00:00</span>. Time that won't come back. Thanks for spending it here.</p>
+        <p class="foot__legal">Fan-made. Punishing: Gray Raven © Kuro Games. Genshin Impact © HoYoverse. Kurumi Tokisaki belongs to the Date A Live rights holders. Snezhnaya map redrawn from the in-game map. Not affiliated.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
+
+  <script src="map-data.js"></script>
+  <script src="runs-data.js"></script>
+  <script src="main.js" defer></script>
+</body>
+</html>
