@@ -1,7 +1,8 @@
 /* 3D world — three.js renders the floating islands of Ronova's domain (assets/3d/world.glb,
    built in Blender by tools/build_world.py) in place of the 2D map. Every section has an
-   island; the wisp flies between them. main.js keeps the panels, dock and live data and
-   hands control over through the `view` hook. Without WebGL or the CDN, the 2D map stays. */
+   island; the wisp flies between them. main.js keeps the panels, dock, live data and which
+   island the wisp is on (`here`, `arrive()`), and hands drawing over through the `view` hook.
+   Without WebGL or the CDN the world stays dark and the dock still opens every section. */
 (() => {
   const mobile = window.matchMedia("(max-width: 700px)").matches;
   const loadScript = (src) => new Promise((res, rej) => {
@@ -110,32 +111,46 @@
       l.position.set(lmPos.x, lmBox.max.y * 0.6 + top.y * 0.4, lmPos.z + 14);
       scene.add(l);
     });
-    const reel = byName("lm_amv_reel"), star = byName("lm_teyvat_star"), greatEye = byName("great_eye"), debris = byName("debris");
+    const reel = byName("lm_amv_reel"), star = byName("lm_teyvat_star"), rift = byName("rift"), debris = byName("debris");
     const watchers = [];
     root.traverse((o) => { if (/^watcher_\d+$/.test(o.name)) watchers.push({ o, y: o.position.y, ph: Math.random() * 6.28 }); });
-    // every eye turns its face to the camera; only the iris (its own node) looks at the wisp
-    const eyes = [...watchers.map((w) => ({ o: w.o, iris: byName(`${w.o.name}_iris`), rx: 1.5, ry: 0.45 })),
-      ...(greatEye ? [{ o: greatEye, iris: byName("great_eye_iris"), rx: 16, ry: 4, tilt: true }] : [])];
-    eyes.forEach((e) => { e.o.rotation.order = "YXZ"; e.blink = 3 + Math.random() * 5; });
-    // the great eye hangs far off in the sky: out of the fog so its shape stays sharp, dimmed so it looms
-    if (greatEye) greatEye.traverse((o) => { if (o.isMesh) { o.material = o.material.clone(); o.material.fog = false; o.castShadow = false; o.material.color.multiplyScalar(0.42); if (o.material.emissiveIntensity) o.material.emissiveIntensity *= 0.4; } });
+    // the watchers and the rift turn to face the camera; every iris (its own node) looks at the wisp
+    const faceCam = [...watchers.map((w) => w.o), ...(rift ? [rift] : [])];
+    faceCam.forEach((o) => { o.rotation.order = "YXZ"; });
+    const irises = [];
+    watchers.forEach((w) => { const i = byName(`${w.o.name}_iris`); if (i) irises.push({ iris: i, frame: w.o, rx: 1.5, ry: 0.45 }); });
+    if (rift) rift.traverse((o) => {
+      if (!/^rift_eye_\d+$/.test(o.name)) return;
+      const i = byName(`${o.name}_iris`), big = o.name === "rift_eye_0";
+      if (i) irises.push({ iris: i, frame: o, rx: big ? 10 : 2.2, ry: big ? 2.6 : 0.6 });
+    });
+    const blinkers = watchers.map((w) => ({ o: w.o, sy: w.o.scale.y, blink: 3 + Math.random() * 5 }));
+    // the rift hangs far off in the sky: out of the fog so its torn edge stays sharp; the void stays unlit black
+    if (rift) rift.traverse((o) => {
+      if (!o.isMesh) return;
+      o.castShadow = o.receiveShadow = false;
+      o.material = o.material.name === "Void" ? new THREE.MeshBasicMaterial({ color: 0x030103 }) : o.material.clone();
+      o.material.fog = false;
+      if (o.material.name === "Sclera") { o.material.color.multiplyScalar(0.7); o.material.emissiveIntensity = 0.1; }
+    });
     const tmpV = new THREE.Vector3();
     function aimEyes(t, dt) {
-      eyes.forEach((e) => {
-        const o = e.o;
+      faceCam.forEach((o) => {
         o.rotation.y = Math.atan2(cam.position.x - o.position.x, cam.position.z - o.position.z);
-        if (e.tilt) o.rotation.x = -Math.atan2(cam.position.y - o.position.y, Math.hypot(cam.position.x - o.position.x, cam.position.z - o.position.z)) * 0.6;
-        if (!e.iris) return;
+        if (o === rift) o.rotation.x = -Math.atan2(cam.position.y - o.position.y, Math.hypot(cam.position.x - o.position.x, cam.position.z - o.position.z)) * 0.6;
+      });
+      irises.forEach((e) => {
         tmpV.copy(wisp.position);
-        o.worldToLocal(tmpV);
+        e.frame.worldToLocal(tmpV);
         const n = tmpV.length() || 1;
         e.iris.position.x += (Math.max(-1, Math.min(1, (tmpV.x / n) * 2.2)) * e.rx - e.iris.position.x) * 0.1;
         e.iris.position.y += (Math.max(-1, Math.min(1, (tmpV.y / n) * 2.2)) * e.ry - e.iris.position.y) * 0.1;
-        if (reduceMotion) return;
-        e.blink -= dt;                                       // now and then the eye blinks
+      });
+      if (reduceMotion) return;
+      blinkers.forEach((e) => {                            // now and then a watcher blinks
+        e.blink -= dt;
         const b = e.blink < 0 ? Math.min(1, Math.abs(e.blink + 0.09) / 0.09) : 1;
-        o.scale.y = o.userData.sy || (o.userData.sy = o.scale.y);
-        o.scale.y = o.userData.sy * (0.12 + 0.88 * b);
+        e.o.scale.y = e.sy * (0.12 + 0.88 * b);
         if (e.blink < -0.18) e.blink = 2.5 + Math.random() * 6;
       });
     }
@@ -198,20 +213,15 @@
     });
 
     /* ---------- camera rig: orbit around a focus that follows the wisp ---------- */
-    const HOME = { dist: mobile ? 820 : 580, pitch: 0.34 };
+    const HOME = { dist: mobile ? 840 : 600, pitch: 0.3 };
     const NEAR = { dist: mobile ? 220 : 170, pitch: 0.4 };
     const rig = { yaw: 0.18, pitch: HOME.pitch, dist: HOME.dist, goal: { yaw: 0.18, pitch: HOME.pitch, dist: HOME.dist } };
-    const HOME_FOCUS = new THREE.Vector3(0, 10, 20);
+    const HOME_FOCUS = new THREE.Vector3(0, 30, 20);
     const focus = HOME_FOCUS.clone(), focusGoal = HOME_FOCUS.clone();
     let overview = true;
 
-    // which island the wisp starts on: the one nearest the player's map position
-    const nearestId = () => {
-      let best = "spawn", bd = Math.hypot(player.x - SPAWN.x, player.y - SPAWN.y);
-      POIS.forEach((p) => { const d = Math.hypot(player.x - p.x, player.y - p.y); if (d < bd) { bd = d; best = p.id; } });
-      return best;
-    };
-    let at = nearestId(), flight = null;
+    // the wisp starts on the island main.js says it is on (a deep link may have moved it)
+    let at = islands[here] ? here : "spawn", flight = null;
     const wispPos = islands[at].perch.clone();
     if (at !== "spawn") { overview = false; focusGoal.copy(wispPos); focus.copy(wispPos); rig.goal.dist = rig.dist = NEAR.dist; rig.goal.pitch = rig.pitch = NEAR.pitch; }
 
@@ -221,9 +231,7 @@
       if (!isl) return;
       const done = () => {
         at = id;
-        const poi = POIS.find((q) => q.id === id) || { x: SPAWN.x, y: SPAWN.y + 24 };
-        player.x = poi.x; player.y = poi.y;                  // main.js reads this for "near" and E to enter
-        updateNear();
+        arrive(id);                                          // main.js: the "E · Enter" prompt
         if (open && id !== "spawn") openSection(id);
       };
       overview = false;
@@ -355,10 +363,6 @@
 
     world.prepend(canvas);
     world.appendChild(labels);
-    document.body.classList.add("is-3d");
-    const hint = $("[data-hint-desktop]"), hintT = $("[data-hint-touch]");
-    if (hint) hint.textContent = "Drag to look · click an island · 1–8 sections · scroll to zoom · Esc back";
-    if (hintT) hintT.textContent = "Drag to look · tap an island to fly there";
     frame(true);
     if (!document.body.classList.contains("on-title")) startLoop();
   }
@@ -366,6 +370,9 @@
   document.documentElement.dataset.world3d = "loading";
   boot().then(() => { document.documentElement.dataset.world3d = "ready"; }).catch((err) => {
     document.documentElement.dataset.world3d = `failed: ${err && err.message}`;
-    console.warn("3D world unavailable, keeping the 2D map:", err);
+    console.warn("3D world unavailable; the dock still opens every section:", err);
+    const hint = $("[data-hint-desktop]"), hintT = $("[data-hint-touch]");
+    if (hint) hint.textContent = "The 3D world couldn't load here · use the buttons below or 1–8";
+    if (hintT) hintT.textContent = "The 3D world couldn't load here · use the buttons below";
   });
 })();

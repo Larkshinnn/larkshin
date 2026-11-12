@@ -84,6 +84,11 @@ M = {
     "iris_ring": mat("IrisRing", "#3a0710", 0.4, 0, "#ff2a3a", 0.6),
     "wing": mat("Wing", "#6e0b19", 0.55, 0, "#ff2a3a", 0.35),
     "wing_vein": mat("WingVein", "#2a040b", 0.6),
+    "rift_edge": mat("RiftEdge", "#ffd0c8", 0.5, 0, "#ff5560", 1.5),
+    "rift_glow": mat("RiftGlow", "#8e1020", 0.5, 0, "#ff2a3a", 1.1),
+    "void": mat("Void", "#050104", 1.0),
+    "void_mist": mat("VoidMist", "#1c0408", 0.9, 0, "#6a0c18", 0.35),
+    "star": mat("Star", "#ffffff", 0.5, 0, "#ffe6e0", 2.2),
 }
 
 
@@ -733,6 +738,67 @@ def build_bridges():
     return p.obj()
 
 
+def build_rift():
+    """The rift: a torn, bat-winged gash in the sky with glowing ragged edges, a starry void
+    inside, her great eye in the middle and six smaller eyes around it (after the official art).
+    Built in the eye plane (u across, v up), facing -Y."""
+    rng = random.Random(66)
+    Wd, Hd, N = 300.0, 84.0, 170
+
+    def spike(x, c, w, h):
+        return h * max(0.0, 1 - abs(x - c) / w)
+
+    def outline(inflate=1.0, jag=1.0, seed=0):
+        r = random.Random(seed)
+        top, bot = [], []
+        for i in range(N + 1):
+            x = -Wd / 2 + Wd * i / N
+            k = max(0.0, 1 - (2 * x / Wd) ** 2)
+            t = Hd / 2 * k ** 1.5
+            t += spike(x, 0, 11, Hd * 0.62) + spike(x, -22, 8, Hd * 0.26) + spike(x, 24, 9, Hd * 0.3) + spike(x, -60, 7, Hd * 0.14) + spike(x, 64, 7, Hd * 0.16)
+            t += (r.random() - 0.3) * Hd * 0.07 * jag * k ** 0.5 * (1 if i % 2 else 0.4)
+            b = -Hd / 2 * 0.78 * k ** 1.3
+            b -= spike(x, -4, 6, Hd * 0.62) + spike(x, -16, 5, Hd * 0.38) + spike(x, 10, 6, Hd * 0.48) + spike(x, 26, 5, Hd * 0.3) + spike(x, -34, 5, Hd * 0.24) + spike(x, 48, 4, Hd * 0.16)
+            b -= (r.random() - 0.3) * Hd * 0.06 * jag * k ** 0.5 * (1 if i % 2 else 0.4)
+            top.append((x * inflate, t * inflate + (0.6 if inflate > 1 else 0)))
+            bot.append((x * inflate, b * inflate - (0.6 if inflate > 1 else 0)))
+        return top + list(reversed(bot[1:-1]))
+
+    p = Part("rift")
+    inner = outline(1.0, 1.0, 1)
+    plate(p, M["rift_glow"], outline(1.09, 1.8, 2), 2.6, 0.6)          # outer red glow
+    plate(p, M["rift_edge"], outline(1.04, 1.4, 3), 2.0, 0.6)          # the bright torn edge
+    plate(p, M["void"], inner, 1.4, 1.0)                               # the void
+    # long white tears running out from both tips, and red streaks crossing the sky
+    for s in (1, -1):
+        plate(p, M["rift_edge"], [(s * Wd * 0.46, 1.2), (s * Wd * 0.82, 4.5), (s * Wd * 0.47, -1.2)][::s], 2.0, 0.4)
+        plate(p, M["rift_glow"], [(s * Wd * 0.3, 14), (s * Wd * 0.7, 36), (s * Wd * 0.31, 11)][::s], 2.4, 0.3)
+        plate(p, M["rift_glow"], [(s * Wd * 0.28, -12), (s * Wd * 0.62, -40), (s * Wd * 0.29, -9)][::s], 2.4, 0.3)
+    # inside: dark crimson mist and stars
+    for _ in range(7):
+        cx, cy = rng.uniform(-Wd * 0.33, Wd * 0.33), rng.uniform(-Hd * 0.16, Hd * 0.16)
+        if not inside((cx, cy), inner):
+            continue
+        rx, ry = rng.uniform(9, 20), rng.uniform(2.5, 5)
+        plate(p, M["void_mist"], [(cx + rx * math.cos(a * math.pi / 10), cy + ry * math.sin(a * math.pi / 10)) for a in range(20)], 0.4, 0.2)
+    for _ in range(38):
+        sx, sy = rng.uniform(-Wd * 0.42, Wd * 0.42), rng.uniform(-Hd * 0.4, Hd * 0.4)
+        if not inside((sx, sy), inner):
+            continue
+        r = rng.uniform(0.25, 0.7)
+        plate(p, M["star"], [(sx, sy + r * 1.6), (sx + r, sy), (sx, sy - r * 1.6), (sx - r, sy)], 0.2, 0.15)
+    ro = p.obj(W(0, 128, -1000))
+    ro.scale = (1.8, 1.8, 1.8)
+    # the great eye in the middle, six smaller ones around it; every iris is its own node
+    eyes = [((0, 0), 62, 25)] + [((s * x, y), w, w * 0.42) for s in (1, -1) for (x, y, w) in ((40, 13, 15), (48, -10, 14), (74, 3, 12))]
+    for k, ((u, v), w, h) in enumerate(eyes):
+        ep, ip = Part(f"rift_eye_{k}"), Part(f"rift_eye_{k}_iris")
+        ronova_eye(ep, w, h, iris=ip)
+        eo = ep.obj((u, -0.6, v), parent=ro)
+        ip.obj((0, 0, 0), parent=eo)
+    return ro
+
+
 def build_sky():
     rng = random.Random(21)
     objs = []
@@ -745,13 +811,8 @@ def build_sky():
         iris.obj((0, 0, 0), parent=o)
         o.scale = (1.15, 1.15, 1.15)
         objs.append(o)
-    # the great eye of her domain, in the sky behind the islands, turned to the viewer by world3d.js
-    g, gi = Part("great_eye"), Part("great_eye_iris")
-    ronova_eye(g, 96, 36, iris=gi, wings=5, wing_len=105)
-    go = g.obj(W(0, 30, -1000))
-    gi.obj((0, 0, 0), parent=go)
-    go.scale = (2.6, 2.6, 2.6)
-    objs.append(go)
+    # her domain's rift, torn open in the sky behind the islands, turned to the viewer by world3d.js
+    objs.append(build_rift())
     # broken rock drifting further out
     d = Part("debris")
     for _ in range(46):

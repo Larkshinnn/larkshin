@@ -1,4 +1,4 @@
-/* LarkShinnn — the floating islands of Ronova's domain (3D), with the Snezhnaya map as 2D fallback
+/* LarkShinnn — the floating islands of Ronova's domain (drawn in 3D by world3d.js)
    Live data: Huaxu (api.huaxu.app, player 26438993) and GitHub, fetched on load.
    Snapshot values below are the fallback when a request fails. */
 
@@ -63,18 +63,17 @@ const ICONS = {
   crown: '<path d="M4 18h16M5 18 3.5 8l5 4L12 5l3.5 7 5-4L19 18"/><circle cx="12" cy="13.5" r="1.4"/>',
 };
 
-/* map units: the generated map is 1000 wide */
+/* the sections of the site, one floating island each (positions live in tools/build_world.py) */
 const POIS = [
-  { id: "profile", short: "Profile", place: "Malder's Peak", x: 175, y: 300, icon: "cage" },
-  { id: "runs", short: "Best Runs", place: "The Pain Cage Spire", x: 250, y: 330, icon: "crown" },
-  { id: "team", short: "Fav Team", place: "Hall of the Chosen", x: 330, y: 225, icon: "team" },
-  { id: "ledger", short: "Death Ledger", place: "Ronova's Archive", x: 405, y: 365, icon: "book" },
-  { id: "amv", short: "AMV", place: "The Cutting Room", x: 560, y: 190, icon: "film" },
-  { id: "dev", short: "Developer", place: "Compiler Tundra", x: 705, y: 232, icon: "code" },
-  { id: "teyvat", short: "Teyvat", place: "Border of Teyvat", x: 845, y: 175, icon: "star" },
-  { id: "contact", short: "Contact", place: "The Last Outpost", x: 880, y: 255, icon: "send" },
+  { id: "profile", short: "Profile", place: "Malder's Peak", icon: "cage" },
+  { id: "runs", short: "Best Runs", place: "The Pain Cage Spire", icon: "crown" },
+  { id: "team", short: "Fav Team", place: "Hall of the Chosen", icon: "team" },
+  { id: "ledger", short: "Death Ledger", place: "Ronova's Archive", icon: "book" },
+  { id: "amv", short: "AMV", place: "The Cutting Room", icon: "film" },
+  { id: "dev", short: "Developer", place: "Compiler Tundra", icon: "code" },
+  { id: "teyvat", short: "Teyvat", place: "Border of Teyvat", icon: "star" },
+  { id: "contact", short: "Contact", place: "The Last Outpost", icon: "send" },
 ];
-const SPAWN = { x: 458, y: 262, place: "Requiem Square" };
 
 /* ============================================================
    TITLE SCREEN
@@ -188,119 +187,29 @@ function enterWorld() {
 $("[data-enter]").addEventListener("click", enterWorld);
 
 /* ============================================================
-   MAP
+   WORLD — the floating islands are drawn by world3d.js. This part keeps which island the
+   wisp is on, the input, and the place labels. Without WebGL the dock still opens every
+   section directly.
    ============================================================ */
-const MAP = window.SNEZHNAYA;
-const SCALE = 3;                       // map unit -> px at zoom 1
-const MW = MAP.w * SCALE, MH = MAP.h * SCALE;
-const mapSvg = $("[data-map]");
-mapSvg.setAttribute("viewBox", `0 0 ${MAP.w} ${MAP.h}`);
-mapSvg.setAttribute("width", MW);
-mapSvg.setAttribute("height", MH);
+const world = $("[data-world]");
+// world3d.js sets this once the 3D world is ready: { camera(snap), click(e), travel(poi, open), home(), zoomBy(f) }
+let view = null;
+let here = "spawn";                    // the island the wisp is on: "spawn" (Requiem Square) or a POI id
+const keys = new Set();
 
-MAP.sea.forEach((ring, i) => ring.forEach((d) => mapSvg.appendChild(svgEl("path", { d, class: `m-sea${i ? ` m-sea--${i + 1}` : ""}` }))));
-const fogPath = svgEl("path", { d: MAP.fog.join(" "), class: "m-fog" });
-mapSvg.appendChild(fogPath);
-const coastD = MAP.coast.join(" ");
-mapSvg.appendChild(svgEl("path", { d: coastD, class: "m-land" }));
-MAP.topo.forEach((lvl, i) => lvl.forEach((d) => mapSvg.appendChild(svgEl("path", { d, class: "m-topo", style: `stroke-opacity:${(0.5 + i * 0.12).toFixed(2)}` }))));
-const coastPath = svgEl("path", { d: coastD, class: "m-coast" });
-mapSvg.appendChild(coastPath);
-mapSvg.appendChild(Object.assign(svgEl("text", { x: 520, y: 470, class: "m-label", "font-size": 64 }), { textContent: "SNEZHNAYA" }));
-
-// peaks on the highest contour rings
-requestAnimationFrame(() => {
-  const top = MAP.topo[MAP.topo.length - 1];
-  top.forEach((d) => {
-    const p = svgEl("path", { d });
-    mapSvg.appendChild(p);
-    const b = p.getBBox();
-    p.remove();
-    if (b.width < 6) return;
-    const cx = b.x + b.width / 2, cy = b.y + b.height / 2;
-    mapSvg.appendChild(svgEl("path", { class: "m-peak", d: `M${cx - 9} ${cy + 5} L${cx - 2} ${cy - 6} L${cx + 2} ${cy - 1} L${cx + 5} ${cy - 4} L${cx + 11} ${cy + 5}` }));
-  });
-});
-
-// Ronova's marks scattered over the land: little eyes with star pupils
-[[245, 245], [470, 245], [620, 215], [780, 205], [930, 200], [360, 290]].forEach(([x, y]) => {
-  const g = svgEl("g", { transform: `translate(${x} ${y})` });
-  g.append(svgEl("image", { href: "assets/ronova/vector/ronova-watcher.svg", x: -11, y: -5.5, width: 22, height: 11, opacity: 0.85 }));
-  mapSvg.appendChild(g);
-});
-
-// a dotted route linking the places, in dock order, starting at the square
-const route = [SPAWN, ...POIS];
-mapSvg.appendChild(svgEl("path", {
-  class: "m-path",
-  d: route.map((p, i) => {
-    if (!i) return `M${p.x} ${p.y}`;
-    const q = route[i - 1], mx = (p.x + q.x) / 2 + (p.y - q.y) * 0.2, my = (p.y + q.y) / 2 - (p.x - q.x) * 0.2;
-    return `Q${mx} ${my} ${p.x} ${p.y}`;
-  }).join(" "),
-}));
-
-// points of interest
-const poiLayer = $("[data-pois]");
+// place labels; world3d.js floats them over their islands
 const poiEls = POIS.map((p) => {
   const b = document.createElement("button");
   b.type = "button";
   b.className = "poi";
   b.tabIndex = -1;
-  b.style.left = `${p.x * SCALE}px`;
-  b.style.top = `${p.y * SCALE}px`;
   b.innerHTML = `<span class="poi__ring"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[p.icon]}</svg></span><span class="poi__label">${p.place}</span>`;
   b.addEventListener("click", (e) => { e.stopPropagation(); travelTo(p, true); });
-  poiLayer.appendChild(b);
   return b;
 });
 
-/* ============================================================
-   CAMERA + PLAYER
-   ============================================================ */
-const world = $("[data-world]"), camera = $("[data-camera]"), playerEl = $("[data-player]"), playerBody = $(".player__body");
-const player = { x: SPAWN.x, y: SPAWN.y + 24, heading: -90 };   // just south of the square, facing it
-let zoom = 1, cam = { x: 0, y: 0 }, target = null, onArrive = null, flying = false;
-// world3d.js sets this once the 3D world is ready: { camera(snap), click(e), travel(poi, open), home(), zoomBy(f) }
-let view = null;
-const keys = new Set();
-const canHitTest = typeof fogPath.isPointInFill === "function";
-
-function baseZoom() {
-  const vw = window.innerWidth;
-  if (vw < 700) return 0.6;                          // phones: closer, so labels stay readable
-  return Math.min(Math.max(vw / 2000, 0.5), 0.85);
-}
-zoom = baseZoom();
-window.addEventListener("resize", () => { zoom = baseZoom(); placeCamera(true); });
-
-function onLand(x, y) {
-  if (!canHitTest) return x > 0 && y > 0 && x < MAP.w && y < MAP.h;
-  try { return fogPath.isPointInFill(new DOMPoint(x, y)); } catch { return true; }
-}
-
-function placeCamera(snap) {
-  if (view) return view.camera(snap);
-  const vw = window.innerWidth, vh = window.innerHeight;
-  const sw = MW * zoom, sh = MH * zoom;
-  let tx = vw / 2 - player.x * SCALE * zoom;
-  let ty = vh / 2 - player.y * SCALE * zoom;
-  const m = 120;
-  tx = sw + 2 * m < vw ? (vw - sw) / 2 : Math.min(m, Math.max(vw - sw - m, tx));
-  ty = sh + 2 * m < vh ? (vh - sh) / 2 : Math.min(m, Math.max(vh - sh - m, ty));
-  if (snap) { cam.x = tx; cam.y = ty; }
-  else { cam.x += (tx - cam.x) * 0.12; cam.y += (ty - cam.y) * 0.12; }
-  camera.style.transform = `translate3d(${cam.x.toFixed(1)}px, ${cam.y.toFixed(1)}px, 0) scale(${zoom})`;
-}
-function drawPlayer() {
-  playerEl.style.transform = `translate3d(${player.x * SCALE}px, ${player.y * SCALE}px, 0)`;
-  playerBody.style.transform = `rotate(${player.heading + 90}deg)`;
-}
-drawPlayer();
-placeCamera(true);
-
-// input
-const KEYMAP = { w: [0, -1], arrowup: [0, -1], s: [0, 1], arrowdown: [0, 1], a: [-1, 0], arrowleft: [-1, 0], d: [1, 0], arrowright: [1, 0] };
+// input: W/A/S/D and the arrows orbit and zoom the view (read by world3d.js each frame)
+const VIEW_KEYS = new Set(["w", "a", "s", "d", "arrowup", "arrowdown", "arrowleft", "arrowright"]);
 window.addEventListener("keydown", (e) => {
   const k = e.key.toLowerCase();
   if (document.body.classList.contains("on-title")) {
@@ -309,85 +218,46 @@ window.addEventListener("keydown", (e) => {
   }
   if (openPanel) { if (k === "escape") closePanel(); else if (k === "tab") trapFocus(e); return; }
   if (e.target.closest && e.target.closest("input, textarea")) return;
-  if (KEYMAP[k]) { keys.add(k); target = null; onArrive = null; flying = false; e.preventDefault(); }
+  if (VIEW_KEYS.has(k)) { keys.add(k); e.preventDefault(); }
   else if (k === "e" || (k === "enter" && e.target === document.body)) { if (nearPoi) { e.preventDefault(); openSection(nearPoi.id); } }
   else if (/^[1-9]$/.test(k) && POIS[+k - 1]) { travelTo(POIS[+k - 1], true); }
-  else if (k === "+" || k === "=") { if (view) view.zoomBy(0.9); else zoom = Math.min(zoom + 0.1, 1.6); }
-  else if (k === "-") { if (view) view.zoomBy(1.1); else zoom = Math.max(zoom - 0.1, 0.45); }
+  else if (k === "+" || k === "=") view?.zoomBy(0.9);
+  else if (k === "-") view?.zoomBy(1.1);
 });
 window.addEventListener("keyup", (e) => keys.delete(e.key.toLowerCase()));
 window.addEventListener("blur", () => keys.clear());
-
-world.addEventListener("click", (e) => {
-  if (openPanel) return;
-  if (view) return view.click(e);
-  const x = (e.clientX - cam.x) / (SCALE * zoom), y = (e.clientY - cam.y) / (SCALE * zoom);
-  if (!onLand(x, y)) return;
-  target = { x, y }; onArrive = null; flying = false;
-});
+world.addEventListener("click", (e) => { if (!openPanel) view?.click(e); });
 world.addEventListener("wheel", (e) => {
+  if (!view) return;
   e.preventDefault();
-  if (view) return view.zoomBy(e.deltaY > 0 ? 1.08 : 0.92);
-  zoom = Math.min(Math.max(zoom * (e.deltaY > 0 ? 0.92 : 1.08), 0.45), 1.6);
+  view.zoomBy(e.deltaY > 0 ? 1.08 : 0.92);
 }, { passive: false });
 
 function travelTo(p, open) {
   if (openPanel) closePanel(true);
   if (document.body.classList.contains("on-title")) enterWorld();
-  if (view) return view.travel(p, open);            // 3D: the wisp flies to the island
-  const d = Math.hypot(p.x - player.x, p.y - player.y);
-  if (d < 26) { if (open) openSection(p.id); return; }
-  target = { x: p.x, y: p.y + 16 };
-  flying = true;
-  onArrive = open ? () => openSection(p.id) : null;
+  if (view) return view.travel(p, open);            // the wisp flies to the island, then arrive()
+  arrive(p.id);
+  if (open) openSection(p.id);
 }
 
-// proximity
+// arriving at an island: the "E · Enter" prompt and the highlighted label
 let nearPoi = null;
-const prompt = $("[data-prompt]"), promptText = $("[data-prompt-text]"), placeEl = $("[data-place]"), needle = $("[data-needle]");
+const prompt = $("[data-prompt]"), promptText = $("[data-prompt-text]");
 prompt.addEventListener("click", () => nearPoi && openSection(nearPoi.id));
-function updateNear() {
-  let best = null, bd = 40;
-  POIS.forEach((p) => { const d = Math.hypot(p.x - player.x, p.y - player.y); if (d < bd) { bd = d; best = p; } });
-  if (best !== nearPoi) {
-    nearPoi = best;
-    poiEls.forEach((el, i) => el.classList.toggle("is-near", POIS[i] === best));
-    if (best) { promptText.textContent = `Enter · ${best.short}`; placeEl.textContent = best.place; }
-    else placeEl.textContent = Math.hypot(SPAWN.x - player.x, SPAWN.y - player.y) < 50 ? SPAWN.place : "Death's Domain";
-    prompt.classList.toggle("is-on", !!best && !openPanel);
-  }
+function arrive(id) {
+  here = id;
+  nearPoi = POIS.find((p) => p.id === id) || null;
+  poiEls.forEach((el, i) => el.classList.toggle("is-near", POIS[i] === nearPoi));
+  if (nearPoi) promptText.textContent = `Enter · ${nearPoi.short}`;
+  prompt.classList.toggle("is-on", !!nearPoi && !openPanel);
 }
 
-// loop
-let last = 0, looping = false;
-function startLoop() { if (looping) return; looping = true; last = performance.now(); requestAnimationFrame(tick); }
-function tick(t) {
-  const dt = Math.min((t - last) / 1000, 0.05); last = t;
-  if (view) { view.camera(reduceMotion); requestAnimationFrame(tick); return; }   // 3D drives itself
-  let vx = 0, vy = 0;
-  keys.forEach((k) => { vx += KEYMAP[k][0]; vy += KEYMAP[k][1]; });
-  let speed = 95;
-  if (!vx && !vy && target) {
-    const dx = target.x - player.x, dy = target.y - player.y, d = Math.hypot(dx, dy);
-    if (d < 2) { target = null; flying = false; const cb = onArrive; onArrive = null; if (cb) cb(); }
-    else { vx = dx / d; vy = dy / d; if (flying) speed = Math.min(420, 140 + d * 2.2); }
-  }
-  if (vx || vy) {
-    const n = Math.hypot(vx, vy); vx /= n; vy /= n;
-    const step = speed * dt;
-    const nx = player.x + vx * step, ny = player.y + vy * step;
-    if (flying || onLand(nx, ny)) { player.x = nx; player.y = ny; }
-    else if (onLand(nx, player.y)) player.x = nx;
-    else if (onLand(player.x, ny)) player.y = ny;
-    else target = null;
-    const h = Math.atan2(vy, vx) * 180 / Math.PI;
-    let diff = ((h - player.heading + 540) % 360) - 180;
-    player.heading += diff * Math.min(1, dt * 12);
-    needle.style.transform = `rotate(${player.heading + 90}deg)`;
-    drawPlayer();
-    updateNear();
-  }
-  placeCamera(reduceMotion);
+// frame loop: world3d.js draws once it is ready
+let looping = false;
+function startLoop() { if (looping) return; looping = true; requestAnimationFrame(tick); }
+function tick() {
+  if (view) view.camera(reduceMotion);
   requestAnimationFrame(tick);
 }
 
@@ -818,17 +688,10 @@ $$("[data-copy]").forEach((btn) => btn.addEventListener("click", async () => {
 const stay = $("[data-stay]"), born = Date.now();
 setInterval(() => { const s = Math.floor((Date.now() - born) / 1000); stay.textContent = `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`; }, 1000);
 
-// deep link: #team etc. skips the title screen
+// deep link: #team etc. starts on that island with its panel open; #map skips the title screen
 const hashId = location.hash.slice(1);
-if (POIS.some((p) => p.id === hashId)) {
-  const p = POIS.find((q) => q.id === hashId);
-  player.x = p.x; player.y = p.y + 16;
-  drawPlayer(); placeCamera(true);
-  enterWorld(); updateNear(); openSection(hashId);
-} else {
-  updateNear();
-  if (hashId === "map") enterWorld();          // /#map skips the title screen
-}
+if (POIS.some((p) => p.id === hashId)) { arrive(hashId); enterWorld(); openSection(hashId); }
+else if (hashId === "map") enterWorld();
 
 /* ============================================================
    FALLING FEATHERS AND SNOW
