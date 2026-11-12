@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="768" height="512" viewBox="0 0 768 512">
+  <defs>
+    <radialGradient id="radial-gradient-1" cx="384" cy="236" r="320" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fdf0ec"/>
+      <stop offset="0.7" stop-color="#e3bdb7"/>
+      <stop offset="1" stop-color="#a8706e"/>
+    </radialGradient>
+    <radialGradient id="radial-gradient-2" cx="384" cy="256" r="112" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9c1428"/>
+      <stop offset="0.75" stop-color="#5c0612"/>
+      <stop offset="1" stop-color="#2a0309"/>
+    </radialGradient>
+    <radialGradient id="radial-gradient-3" cx="384" cy="256" r="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.35" stop-color="#ffd9cc" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#ff5a5f" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <title>ronova-great-eye</title>
+  <g id="Layer_1" data-name="Layer 1">
+    <path d="M314 106 C327.33 101.67 333.67 145.67 344 138 C354.33 130.33 365 61.33 376 60 C387 58.67 398.67 125.33 410 130 C421.33 134.67 434.33 85.33 444 88 C453.67 90.67 456.33 133.33 468 146 C479.67 158.67 518 157.33 514 164 C510 170.67 475.67 182.33 444 186 C412.33 189.67 354 189.67 324 186 C294 182.33 265.67 177.33 264 164 C262.33 150.67 300.67 110.33 314 106 Z" fill="#14030a"/>
+    <path d="M34 256 C209 56 559 56 734 256 C559 456 209 456 34 256 Z" fill="#14030a"/>
+    <path d="M68 256 C226 85.33 542 85.33 700 256 C542 426.67 226 426.67 68 256 Z" fill="none" stroke="#ff5a5f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.45"/>
+    <path d="M84 256 C234 98.67 534 98.67 684 256 C534 413.33 234 413.33 84 256 Z" fill="url(#radial-gradient-1)"/>
+    <path d="M496 256 C496 317.86 445.86 368 384 368 C322.14 368 272 317.86 272 256 C272 194.14 322.14 144 384 144 C445.86 144 496 194.14 496 256 Z" fill="url(#radial-gradient-2)"/>
+    <line x1="476" y1="256" x2="488" y2="256" fill="none" stroke="#e2434f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="471.5" y1="284.43" x2="482.91" y2="288.14" fill="none" stroke="#e2434f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="458.43" y1="310.08" x2="468.14" y2="317.13" fill="none" stroke="#e2434f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="438.08" y1="330.43" x2="445.13" y2="340.14" fill="none" stroke="#e2434f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="412.43" y1="343.5" x2="416.14" y2="354.91" fill="none" stroke="#e2434f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="384" y1="348" x2="384" y2="360" fill="none" stroke="#e2434f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="355.57" y1="343.5" x2="351.86" y2="354.91" fill="none" stroke="#e2434f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="329.92" y1="330.43" x2="322.87" y2="340.14" fill="none" stroke="#e2434f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="309.57" y1="310.08" x2="299.86" y2="317.13" fill="none" stroke="#e2434f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="296.5" y1="284.43" x2="285.09" y2="288.14" fill="none" stroke="#e2434f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="292" y1="256" x2="280" y2="256" fill="none" stroke="#e2434f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="296.5" y1="227.57" x2="285.09" y2="223.86" fill="none" stroke="#e2434f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="309.57" y1="201.92" x2="299.86" y2="194.87" fill="none" stroke="#e2434f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="329.92" y1="181.57" x2="322.87" y2="171.86" fill="none" stroke="#e2434f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="355.57" y1="168.5" x2="351.86" y2="157.09" fill="none" stroke="#e2434f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="384" y1="164" x2="384" y2="152" fill="none" stroke="#e2434f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="412.43" y1="168.5" x2="416.14" y2="157.09" fill="none" stroke="#e2434f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="438.08" y1="181.57" x2="445.13" y2="171.86" fill="none" stroke="#e2434f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="458.43" y1="201.92" x2="468.14" y2="194.87" fill="none" stroke="#e2434f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="471.5" y1="227.57" x2="482.91" y2="223.86" fill="none" stroke="#e2434f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="384,240 379.27,222.33 384,174 388.73,222.33" fill="#f07a7a"/>
+    <polygon points="392,242.14 396.74,224.48 425,184.99 404.93,229.21" fill="#f07a7a"/>
+    <polygon points="397.86,248 410.79,235.07 455.01,215 415.52,243.26" fill="#f07a7a"/>
+    <polygon points="400,256 417.67,251.27 466,256 417.67,260.73" fill="#f07a7a"/>
+    <polygon points="397.86,264 415.52,268.74 455.01,297 410.79,276.93" fill="#f07a7a"/>
+    <polygon points="392,269.86 404.93,282.79 425,327.01 396.74,287.52" fill="#f07a7a"/>
+    <polygon points="384,272 388.73,289.67 384,338 379.27,289.67" fill="#f07a7a"/>
+    <polygon points="376,269.86 371.26,287.52 343,327.01 363.07,282.79" fill="#f07a7a"/>
+    <polygon points="370.14,264 357.21,276.93 312.99,297 352.48,268.74" fill="#f07a7a"/>
+    <polygon points="368,256 350.33,260.73 302,256 350.33,251.27" fill="#f07a7a"/>
+    <polygon points="370.14,248 352.48,243.26 312.99,215 357.21,235.07" fill="#f07a7a"/>
+    <polygon points="376,242.14 363.07,229.21 343,184.99 371.26,224.48" fill="#f07a7a"/>
+    <polygon points="387.62,242.48 387.62,230.25 397.46,205.77 393.74,231.89" fill="#c8324a"/>
+    <polygon points="393.9,246.1 400.01,235.51 420.77,219.23 404.49,239.99" fill="#c8324a"/>
+    <polygon points="397.52,252.38 408.11,246.26 434.23,242.54 409.75,252.38" fill="#c8324a"/>
+    <polygon points="397.52,259.62 409.75,259.62 434.23,269.46 408.11,265.74" fill="#c8324a"/>
+    <polygon points="393.9,265.9 404.49,272.01 420.77,292.77 400.01,276.49" fill="#c8324a"/>
+    <polygon points="387.62,269.52 393.74,280.11 397.46,306.23 387.62,281.75" fill="#c8324a"/>
+    <polygon points="380.38,269.52 380.38,281.75 370.54,306.23 374.26,280.11" fill="#c8324a"/>
+    <polygon points="374.1,265.9 367.99,276.49 347.23,292.77 363.51,272.01" fill="#c8324a"/>
+    <polygon points="370.48,259.62 359.89,265.74 333.77,269.46 358.25,259.62" fill="#c8324a"/>
+    <polygon points="370.48,252.38 358.25,252.38 333.77,242.54 359.89,246.26" fill="#c8324a"/>
+    <polygon points="374.1,246.1 363.51,239.99 347.23,219.23 367.99,235.51" fill="#c8324a"/>
+    <polygon points="380.38,242.48 374.26,231.89 370.54,205.77 380.38,230.25" fill="#c8324a"/>
+    <path d="M424 256 C424 278.09 406.09 296 384 296 C361.91 296 344 278.09 344 256 C344 233.91 361.91 216 384 216 C406.09 216 424 233.91 424 256 Z" fill="url(#radial-gradient-3)"/>
+    <path d="M362 216 C362 222.63 356.63 228 350 228 C343.37 228 338 222.63 338 216 C338 209.37 343.37 204 350 204 C356.63 204 362 209.37 362 216 Z" fill="#ffffff" opacity="0.7"/>
+  </g>
+</svg>

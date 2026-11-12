@@ -4,18 +4,19 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>LarkShinnn</title>
-  <meta name="description" content="LarkShinnn — PPC malder in Punishing: Gray Raven, AMV editor, and developer. An explorable map of Snezhnaya." />
+  <meta name="description" content="LarkShinnn — PPC malder in Punishing: Gray Raven, AMV editor, and developer. The floating islands of Ronova's domain." />
   <meta name="theme-color" content="#09080d" />
   <meta property="og:title" content="LarkShinnn" />
   <meta property="og:description" content="Died in PPC. Got up. Retry. Even Ronova is tired of keeping count." />
   <meta property="og:type" content="profile" />
   <meta property="og:image" content="assets/img/og.jpg" />
-  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="assets/ronova/vector/ronova-sigil.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://api.huaxu.app" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Manrope:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }</script>
 </head>
 <body class="on-title">
   <a class="skip" href="#dock">Skip to sections</a>
@@ -29,7 +30,7 @@
         <span class="player__ring"></span>
         <svg class="player__body" viewBox="-20 -20 40 40" aria-hidden="true">
           <path class="player__dir" d="M0 -19 L6 -9 L0 -11.5 L-6 -9Z" />
-          <polygon class="player__star" points="0.00,-10.00 1.74,-3.60 7.82,-6.23 3.90,-0.89 9.75,2.23 3.13,2.49 4.34,9.01 0.00,4.00 -4.34,9.01 -3.13,2.49 -9.75,2.23 -3.90,-0.89 -7.82,-6.23 -1.74,-3.60" />
+          <image class="player__sigil" href="assets/ronova/vector/ronova-sigil.svg" x="-13" y="-13" width="26" height="26" />
         </svg>
       </div>
     </div>
@@ -42,15 +43,11 @@
   <!-- ============ HUD ============ -->
   <header class="hud-id" data-hud>
     <button class="hud-id__avatar" type="button" data-open="profile" aria-label="Open profile">
-      <img data-live-avatar src="assets/pgr/avatar.webp" alt="" width="256" height="256" />
-      <img class="hud-id__frame" data-live-frame src="assets/pgr/frame.webp" alt="" width="256" height="256" />
+      <img src="assets/ronova/avatar.webp" alt="" width="320" height="320" />
+      <img class="hud-id__frame" src="assets/ronova/vector/ronova-poi-frame.svg" alt="" width="256" height="256" />
     </button>
     <div class="hud-id__text">
       <p class="hud-id__name">LarkShinnn</p>
-      <div class="hud-id__lv">
-        <span class="hud-id__tag">CL <b data-live-level>120</b></span>
-        <span class="hud-id__bar"><i data-live-levelbar></i></span>
-      </div>
       <p class="hud-id__sync" data-sync><span class="dot"></span><span data-sync-text>Connecting to Huaxu</span></p>
     </div>
   </header>
@@ -61,8 +58,7 @@
       <circle r="47" class="c-ticks" />
       <text y="-34" class="c-n">N</text>
       <g data-needle>
-        <path class="c-lid" d="M-24 0 Q0 -17 24 0 Q0 17 -24 0Z" />
-        <polygon class="c-star" points="0.00,-8.00 1.39,-2.88 6.25,-4.99 3.12,-0.71 7.80,1.78 2.50,1.99 3.47,7.21 0.00,3.20 -3.47,7.21 -2.50,1.99 -7.80,1.78 -3.12,-0.71 -6.25,-4.99 -1.39,-2.88" />
+        <image class="c-eye" href="assets/ronova/vector/ronova-great-eye.svg" x="-30" y="-20" width="60" height="40" />
         <path class="c-needle" d="M0 -44 L4 -30 L-4 -30Z" />
       </g>
     </svg>
@@ -89,49 +85,36 @@
 
   <!-- ============ TITLE SCREEN ============ -->
   <section class="title-screen" data-title aria-labelledby="hero-title">
-    <svg class="sigil" viewBox="-400 -400 800 800" aria-hidden="true">
-      <defs>
-        <path id="ring-path" d="M0,0 m-300,0 a300,300 0 1,1 600,0 a300,300 0 1,1 -600,0" />
-        <linearGradient id="feather-grad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stop-color="#3a0c15" />
-          <stop offset=".55" stop-color="#8e2433" />
-          <stop offset="1" stop-color="#c24253" />
-        </linearGradient>
-      </defs>
-      <g class="sigil__ring">
-        <circle r="330" class="s-thin" />
-        <circle r="314" class="s-dash" />
-        <text class="s-text"><textPath href="#ring-path">ASMODAY · ISTAROTH · <tspan class="s-red">RONOVA</tspan> · NABERIUS · ASMODAY · ISTAROTH · <tspan class="s-red">RONOVA</tspan> · NABERIUS · ASMODAY ·</textPath></text>
-      </g>
-      <g class="wing wing--l" data-wing></g>
-      <g class="wing wing--r" data-wing></g>
-      <g class="eye">
-        <path class="eye__lid" d="M-150 0 Q0 -104 150 0 Q0 104 -150 0Z" />
-        <g class="eye__look" data-look>
-          <circle r="58" class="eye__iris" />
-          <circle r="44" class="s-faint" />
-          <polygon class="eye__pupil" points="0.00,-30.00 5.21,-10.81 23.45,-18.70 11.70,-2.67 29.25,6.68 9.38,7.48 13.02,27.03 0.00,12.00 -13.02,27.03 -9.38,7.48 -29.25,6.68 -11.70,-2.67 -23.45,-18.70 -5.21,-10.81" />
-        </g>
-      </g>
-    </svg>
+    <!-- Ronova, Ruler of Death. Official art © HoYoverse; halo, day face and mark drawn in VectorCraft -->
+    <div class="art" aria-hidden="true">
+      <div class="art__stage" data-art-stage>
+        <img class="art__img" src="assets/ronova/portrait.webp" alt="" width="1600" height="900" fetchpriority="high" decoding="async" />
+        <img class="art__halo" src="assets/ronova/title/title-halo.svg" alt="" width="900" height="900" decoding="async" />
+      </div>
+    </div>
+    <canvas class="embers" data-embers aria-hidden="true"></canvas>
 
-    <div class="title-screen__inner">
-      <h1 class="hero__title" id="hero-title" aria-label="LarkShinnn">
-        <span class="line" data-split>Lark</span>
-        <span class="line line--indent" data-split>Shinnn</span>
-      </h1>
+    <header class="title-id">
+      <h1 class="hero__title" id="hero-title" aria-label="LarkShinnn"><span class="line" data-split>LarkShinnn</span></h1>
       <p class="hero__lede">Died in PPC. Got up. Retry.<br /><em>Even Ronova is tired of keeping count.</em></p>
-      <ul class="roles" aria-label="Roles">
-        <li><span class="roles__k">PGR</span>PPC Malder</li>
-        <li><span class="roles__k">Edit</span>AMV Editor</li>
-        <li><span class="roles__k">Code</span>Developer</li>
-      </ul>
+    </header>
+    <ul class="roles" aria-label="Roles">
+      <li><span class="roles__k">PGR</span>PPC Malder</li>
+      <li><span class="roles__k">Edit</span>AMV Editor</li>
+      <li><span class="roles__k">Code</span>Developer</li>
+    </ul>
+
+    <div class="clock">
+      <p class="clock__day" data-clock-day></p>
+      <img class="clock__mark" src="assets/ronova/title/title-mark.svg" alt="" width="160" height="84" />
+      <p class="clock__date" data-clock-date></p>
+      <p class="clock__time" data-clock-time></p>
       <button class="enter" type="button" data-enter>
-        <span>Enter Snezhnaya</span>
+        <span>Enter Death's Domain</span>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
       </button>
     </div>
-    <p class="title-screen__legal">Fan-made. Punishing: Gray Raven © Kuro Games · Genshin Impact © HoYoverse · Not affiliated.</p>
+    <p class="title-screen__legal">Fan-made. Ronova artwork and Genshin Impact © HoYoverse · Punishing: Gray Raven © Kuro Games · Not affiliated.</p>
   </section>
 
   <!-- ============ PANELS ============ -->
@@ -242,44 +225,15 @@
       </div>
       <button class="panel__close" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" /></svg></button>
     </header>
-    <div class="panel__body amv">
-      <div>
+    <div class="panel__body">
+      <div class="amv__intro">
         <p class="deck">Sometimes I edit AMVs. Cut, sync to the beat, nudge one frame, render, repeat until 3 a.m.</p>
         <div class="amv__links">
           <a class="btn btn--line" href="https://www.youtube.com/@larkshinnn6630" target="_blank" rel="noopener noreferrer">YouTube <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a>
           <a class="btn btn--line" href="https://www.tiktok.com/@larkshinnn" target="_blank" rel="noopener noreferrer">TikTok <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a>
         </div>
       </div>
-      <div class="timeline" data-timeline aria-hidden="true">
-        <div class="timeline__bar">
-          <span class="timeline__tc" data-tc>00:00:00:00</span>
-          <span class="timeline__seq">seq_ppc_final_v7_FINAL2</span>
-        </div>
-        <div class="timeline__ruler" data-ruler></div>
-        <div class="timeline__tracks">
-          <div class="track"><span class="track__k">V2</span>
-            <div class="track__lane">
-              <i class="clip clip--fx" style="--x:8%;--w:9%">flash</i>
-              <i class="clip clip--fx" style="--x:38%;--w:6%">glow</i>
-              <i class="clip clip--fx" style="--x:71%;--w:12%">shake</i>
-            </div>
-          </div>
-          <div class="track"><span class="track__k">V1</span>
-            <div class="track__lane">
-              <i class="clip" style="--x:0%;--w:17%">luna_ult.mp4</i>
-              <i class="clip" style="--x:17%;--w:14%">kurumi_qte.mp4</i>
-              <i class="clip" style="--x:31%;--w:21%">adelyde_burst.mp4</i>
-              <i class="clip" style="--x:52%;--w:11%">nirvatia.mp4</i>
-              <i class="clip" style="--x:63%;--w:22%">ppc_clear.mp4</i>
-              <i class="clip" style="--x:85%;--w:15%">outro.mp4</i>
-            </div>
-          </div>
-          <div class="track track--audio"><span class="track__k">A1</span>
-            <div class="track__lane"><svg class="wave" data-wave preserveAspectRatio="none"></svg></div>
-          </div>
-          <span class="playhead" data-playhead></span>
-        </div>
-      </div>
+      <div class="reels" data-reels></div>
     </div>
   </section>
 
@@ -351,7 +305,7 @@
       </ul>
       <div class="foot__row">
         <p>You've been here for <span class="mono" data-stay>00:00</span>. Time that won't come back. Thanks for spending it here.</p>
-        <p class="foot__legal">Fan-made. Punishing: Gray Raven © Kuro Games. Genshin Impact © HoYoverse. Kurumi Tokisaki belongs to the Date A Live rights holders. Snezhnaya map redrawn from the in-game map. Not affiliated.</p>
+        <p class="foot__legal">Fan-made. Punishing: Gray Raven © Kuro Games. Genshin Impact © HoYoverse. Ronova artwork is official HoYoverse art. Kurumi Tokisaki belongs to the Date A Live rights holders. Snezhnaya map redrawn from the in-game map. Not affiliated.</p>
       </div>
     </div>
   </section>
@@ -361,5 +315,6 @@
   <script src="map-data.js"></script>
   <script src="runs-data.js"></script>
   <script src="main.js" defer></script>
+  <script src="world3d.js" defer></script>
 </body>
 </html>

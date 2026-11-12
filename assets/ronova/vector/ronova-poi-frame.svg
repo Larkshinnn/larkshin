@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="256" height="256" viewBox="0 0 256 256">
+  <title>ronova-poi-frame</title>
+  <g id="Layer_1" data-name="Layer 1">
+    <polygon points="128,28 118.59,20.41 128,2 137.41,20.41" fill="#c1202f"/>
+    <polygon points="178,41.4 173.64,30.12 186,27.54 189.95,39.53" fill="#c1202f"/>
+    <polygon points="214.6,78 216.47,66.05 228.46,70 225.88,82.36" fill="#c1202f"/>
+    <polygon points="228,128 235.59,118.59 254,128 235.59,137.41" fill="#c1202f"/>
+    <polygon points="214.6,178 225.88,173.64 228.46,186 216.47,189.95" fill="#c1202f"/>
+    <polygon points="178,214.6 189.95,216.47 186,228.46 173.64,225.88" fill="#c1202f"/>
+    <polygon points="128,228 137.41,235.59 128,254 118.59,235.59" fill="#c1202f"/>
+    <polygon points="78,214.6 82.36,225.88 70,228.46 66.05,216.47" fill="#c1202f"/>
+    <polygon points="41.4,178 39.53,189.95 27.54,186 30.12,173.64" fill="#c1202f"/>
+    <polygon points="28,128 20.41,137.41 2,128 20.41,118.59" fill="#c1202f"/>
+    <polygon points="41.4,78 30.12,82.36 27.54,70 39.53,66.05" fill="#c1202f"/>
+    <polygon points="78,41.4 66.05,39.53 70,27.54 82.36,30.12" fill="#c1202f"/>
+    <path d="M232 128 C232 185.44 185.44 232 128 232 C70.56 232 24 185.44 24 128 C24 70.56 70.56 24 128 24 C185.44 24 232 70.56 232 128 Z" fill="#0d0206" stroke="#c1202f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="128" cy="128" r="92" fill="none" stroke="#ff5a5f" stroke-linecap="round" stroke-linejoin="round" opacity="0.45"/>
+    <polygon points="128,8 140,26 128,44 116,26" fill="#33050c" stroke="#14030a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="128,16 134,26 128,36 122,26" fill="#f6e6e2"/>
+  </g>
+</svg>

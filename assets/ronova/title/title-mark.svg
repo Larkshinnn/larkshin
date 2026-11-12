@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="160" height="84" viewBox="0 0 160 84">
+  <title>title-mark</title>
+  <g id="Layer_1" data-name="Layer 1">
+    <path d="M10 10 C40 14 66 36 77 64" fill="none" stroke="#f6e6e2" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M150 10 C120 14 94 36 83 64" fill="none" stroke="#f6e6e2" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M65 22 C72.5 13.33 87.5 13.33 95 22 C87.5 30.67 72.5 30.67 65 22 Z" fill="#33050c" stroke="#f6e6e2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="80" cy="22" r="4" fill="#ff5a5f"/>
+    <polygon points="80,59 87,70 80,81 73,70" fill="#33050c" stroke="#f6e6e2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="80,65.5 82.5,70 80,74.5 77.5,70" fill="#f6e6e2"/>
+  </g>
+</svg>

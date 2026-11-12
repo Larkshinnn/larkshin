@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100" height="120" viewBox="0 0 100 120">
+  <title>glyph-D</title>
+  <g id="Layer_1" data-name="Layer 1">
+    <line x1="8" y1="22" x2="8" y2="98" fill="none" stroke="#f6e6e2" stroke-width="11" stroke-miterlimit="1.5"/>
+    <path d="M22 6 L46 6 C72.51 6 94 30.18 94 60 C94 89.82 72.51 114 46 114 L22 114" fill="none" stroke="#f6e6e2" stroke-width="11" stroke-miterlimit="1.5"/>
+  </g>
+</svg>

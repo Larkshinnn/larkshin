@@ -1,6 +1,6 @@
 # LarkShinnn
 
-Profil online LarkShinnn dalam bentuk peta Snezhnaya yang bisa dijelajahi: PPC malder di Punishing: Gray Raven, editor AMV, dan developer.
+Profil online LarkShinnn dalam bentuk gugusan pulau melayang 3D di wilayah Ronova (Death's Domain): PPC malder di Punishing: Gray Raven, editor AMV, dan developer. Peta Snezhnaya 2D tetap ada sebagai cadangan.
 Tema visual dari Ronova (Shade of Death). Static HTML/CSS/JS murni, tanpa build step.
 
 ## Jalankan lokal
@@ -18,9 +18,10 @@ Import folder/repo ini, Framework Preset **Other**, tanpa build command, output 
 
 ## Kontrol
 
-- WASD / panah: jalan · klik peta: jalan ke titik itu · E: masuk ke tempat terdekat
-- 1–8: langsung ke bagian · Esc: tutup panel · scroll / `+` `-`: zoom
-- Deep link: `/#profile`, `/#runs`, `/#team`, `/#ledger`, `/#amv`, `/#dev`, `/#teyvat`, `/#contact`
+- Dunia 3D (pulau melayang): drag untuk memutar pandangan · klik pulau: wisp terbang ke sana dan membuka bagiannya · A/D atau panah kiri/kanan: putar · W/S, scroll, `+` `-`: zoom · tombol World: kembali ke tampilan semua pulau
+- 1–8: langsung ke bagian · E: buka bagian di pulau tempat wisp berada · Esc: tutup panel
+- Peta 2D (cadangan kalau WebGL atau CDN tidak tersedia): WASD / panah untuk jalan, klik peta untuk jalan ke titik itu
+- Deep link: `/#map` (langsung ke dunia, lewati layar pembuka), `/#profile`, `/#runs`, `/#team`, `/#ledger`, `/#amv`, `/#dev`, `/#teyvat`, `/#contact`
 
 ## Data live
 
@@ -33,8 +34,10 @@ Diambil di browser setiap halaman dibuka. Kalau request gagal, situs memakai sna
 
 ## Struktur
 
+- `world3d.js` + `assets/3d/`: dunia 3D. Gugusan pulau melayang bertingkat (satu pulau per bagian, dihubungkan jembatan rantai ke Requiem Square) dibuat di Blender lewat script: `"C:/Program Files/Blender Foundation/Blender 5.3/blender.exe" -b --factory-startup -P tools/build_world.py`. Hasilnya `world.glb` (dikompres Draco), `world.glb.js` (salinan base64 supaya jalan juga dari `file://`), dan `world.blend` untuk diedit. three.js 0.170 dimuat dari jsDelivr lewat import map di `index.html`; kalau gagal, situs otomatis memakai peta 2D.
 - `map-data.js`: garis pantai, batas kabut, kontur, dan garis laut Snezhnaya dalam bentuk path vektor, hasil trace dari peta in-game.
 - `main.js`: `POIS` (posisi tempat di peta, satuan peta lebar 1000), `FRAMES` dan `SQUADS` (tim favorit), `ROSTER` (Genshin).
+- `assets/ronova/`: art resmi Ronova (layar pembuka, latar panel). `assets/ronova/vector/` (motif: lambang, ornamen, mata, sayap, bulu, bingkai tempat) dan `assets/ronova/ui/` (komponen: bingkai panel & kartu, tombol, pemisah, mahkota, permata, tombol tutup) serta `assets/ronova/title/` (layar pembuka: huruf nama hari bergaya patah `glyph-*.svg`, tanda di bawahnya, halo mata) dibuat di VectorCraft lewat `python tools/ronova_assets.py` (bisa sebagian: `python tools/ronova_assets.py "title-*" "glyph-*"`) (`.vectorcraft` bisa diedit di aplikasinya). Bingkai panel di-slice 72 px, kartu 40 px, tombol 0 36 px (CSS `border-image`).
 - `assets/pgr/`: portrait, avatar, frame, badge fallback · `assets/rank/`: ikon rank (PGR wiki) · `assets/img/`: aset Genshin.
 
 Punishing: Gray Raven © Kuro Games. Genshin Impact © HoYoverse. Situs fan-made, tidak berafiliasi.

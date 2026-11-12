@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="linear-gradient-1" x1="256" y1="186" x2="256" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6e0b19"/>
+      <stop offset="1" stop-color="#ff5a5f"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="305.497" y1="206.503" x2="400.25" y2="111.75" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6e0b19"/>
+      <stop offset="1" stop-color="#ff5a5f"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-3" x1="326" y1="256" x2="460" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6e0b19"/>
+      <stop offset="1" stop-color="#ff5a5f"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-4" x1="305.497" y1="305.497" x2="400.25" y2="400.25" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6e0b19"/>
+      <stop offset="1" stop-color="#ff5a5f"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-5" x1="256" y1="326" x2="256" y2="460" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6e0b19"/>
+      <stop offset="1" stop-color="#ff5a5f"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-6" x1="206.503" y1="305.497" x2="111.75" y2="400.25" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6e0b19"/>
+      <stop offset="1" stop-color="#ff5a5f"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-7" x1="186" y1="256" x2="52" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6e0b19"/>
+      <stop offset="1" stop-color="#ff5a5f"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-8" x1="206.503" y1="206.503" x2="111.75" y2="111.75" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6e0b19"/>
+      <stop offset="1" stop-color="#ff5a5f"/>
+    </linearGradient>
+  </defs>
+  <title>ronova-sigil</title>
+  <g id="Layer_1" data-name="Layer 1">
+    <circle cx="256" cy="256" r="236" fill="#33050c" opacity="0.55"/>
+    <path d="M486 256 C486 383.03 383.03 486 256 486 C128.97 486 26 383.03 26 256 C26 128.97 128.97 26 256 26 C383.03 26 486 128.97 486 256 Z" fill="none" stroke="#c1202f" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M470 256 C470 374.19 374.19 470 256 470 C137.81 470 42 374.19 42 256 C42 137.81 137.81 42 256 42 C374.19 42 470 137.81 470 256 Z" fill="none" stroke="#ff5a5f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+    <polygon points="284.32,187.63 280.28,154.87 316.46,110.03 310.34,167.33" fill="#6e0b19"/>
+    <polygon points="324.37,227.68 344.67,201.66 401.97,195.54 357.13,231.72" fill="#6e0b19"/>
+    <polygon points="324.37,284.32 357.13,280.28 401.97,316.46 344.67,310.34" fill="#6e0b19"/>
+    <polygon points="284.32,324.37 310.34,344.67 316.46,401.97 280.28,357.13" fill="#6e0b19"/>
+    <polygon points="227.68,324.37 231.72,357.13 195.54,401.97 201.66,344.67" fill="#6e0b19"/>
+    <polygon points="187.63,284.32 167.33,310.34 110.03,316.46 154.87,280.28" fill="#6e0b19"/>
+    <polygon points="187.63,227.68 154.87,231.72 110.03,195.54 167.33,201.66" fill="#6e0b19"/>
+    <polygon points="227.68,187.63 201.66,167.33 195.54,110.03 231.72,154.87" fill="#6e0b19"/>
+    <polygon points="256,186 230.63,136.67 256,52 281.37,136.67" fill="url(#linear-gradient-1)" stroke="#14030a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="256,160 245.96,128.39 256,80 266.04,128.39" fill="#f6e6e2" opacity="0.35"/>
+    <polygon points="305.5,206.5 322.45,153.68 400.25,111.75 358.32,189.55" fill="url(#linear-gradient-2)" stroke="#14030a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="323.88,188.12 339.13,158.67 380.45,131.55 353.33,172.87" fill="#f6e6e2" opacity="0.35"/>
+    <polygon points="326,256 375.33,230.63 460,256 375.33,281.37" fill="url(#linear-gradient-3)" stroke="#14030a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="352,256 383.61,245.96 432,256 383.61,266.04" fill="#f6e6e2" opacity="0.35"/>
+    <polygon points="305.5,305.5 358.32,322.45 400.25,400.25 322.45,358.32" fill="url(#linear-gradient-4)" stroke="#14030a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="323.88,323.88 353.33,339.13 380.45,380.45 339.13,353.33" fill="#f6e6e2" opacity="0.35"/>
+    <polygon points="256,326 281.37,375.33 256,460 230.63,375.33" fill="url(#linear-gradient-5)" stroke="#14030a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="256,352 266.04,383.61 256,432 245.96,383.61" fill="#f6e6e2" opacity="0.35"/>
+    <polygon points="206.5,305.5 189.55,358.32 111.75,400.25 153.68,322.45" fill="url(#linear-gradient-6)" stroke="#14030a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="188.12,323.88 172.87,353.33 131.55,380.45 158.67,339.13" fill="#f6e6e2" opacity="0.35"/>
+    <polygon points="186,256 136.67,281.37 52,256 136.67,230.63" fill="url(#linear-gradient-7)" stroke="#14030a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="160,256 128.39,266.04 80,256 128.39,245.96" fill="#f6e6e2" opacity="0.35"/>
+    <polygon points="206.5,206.5 153.68,189.55 111.75,111.75 189.55,153.68" fill="url(#linear-gradient-8)" stroke="#14030a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="188.12,188.12 158.67,172.87 131.55,131.55 172.87,158.67" fill="#f6e6e2" opacity="0.35"/>
+    <polygon points="256,184 267.48,228.28 306.91,205.09 283.72,244.52 328,256 283.72,267.48 306.91,306.91 267.48,283.72 256,328 244.52,283.72 205.09,306.91 228.28,267.48 184,256 228.28,244.52 205.09,205.09 244.52,228.28" fill="#f6e6e2" stroke="#c1202f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="271.31,219.04 268.73,243.27 292.96,240.69 274,256 292.96,271.31 268.73,268.73 271.31,292.96 256,274 240.69,292.96 243.27,268.73 219.04,271.31 238,256 219.04,240.69 243.27,243.27 240.69,219.04 256,238" fill="#c1202f"/>
+    <circle cx="256" cy="256" r="9" fill="#14030a"/>
+  </g>
+</svg>

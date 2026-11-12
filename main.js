@@ -1,4 +1,4 @@
-/* LarkShinnn — explorable Snezhnaya
+/* LarkShinnn — the floating islands of Ronova's domain (3D), with the Snezhnaya map as 2D fallback
    Live data: Huaxu (api.huaxu.app, player 26438993) and GitHub, fetched on load.
    Snapshot values below are the fallback when a request fails. */
 
@@ -93,41 +93,87 @@ $$("[data-split]").forEach((line) => {
     line.appendChild(s);
   });
 });
+/* the day in the broken face drawn in VectorCraft (assets/ronova/title/glyph-*.svg), date and hour */
+const clockDay = $("[data-clock-day]"), clockDate = $("[data-clock-date]"), clockTime = $("[data-clock-time]");
+const DAYS = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+let shownDay = -1;
+function tickClock() {
+  const now = new Date(), d = now.getDay();
+  if (d !== shownDay) {
+    shownDay = d;
+    const name = DAYS[d];
+    clockDay.replaceChildren(...[...name].map((ch, i) => {
+      const img = new Image();
+      img.src = `assets/ronova/title/glyph-${ch}.svg`;
+      img.alt = ""; img.style.setProperty("--i", i);
+      return img;
+    }));
+    clockDay.setAttribute("aria-label", name[0] + name.slice(1).toLowerCase());
+    clockDay.parentElement.style.setProperty("--glen", (name.length * 1.32).toFixed(2));
+    clockDate.textContent = `${now.getDate()} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
+  }
+  const hh = String(now.getHours()).padStart(2, "0"), mm = String(now.getMinutes()).padStart(2, "0");
+  clockTime.innerHTML = `-${hh}<b>:</b>${mm}-`;
+  clockTime.setAttribute("aria-label", `${hh}:${mm}`);
+}
+tickClock();
+setInterval(() => { if (document.body.classList.contains("on-title")) tickClock(); }, 1000 * 5);
+
 requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add("is-ready")));
 
-function buildWing(g) {
-  const flap = svgEl("g", { class: "flap" });
-  const feather = (x, y, ang, len, wid, op, hole) => {
-    const f = svgEl("g", { transform: `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${ang.toFixed(1)})` });
-    f.append(
-      svgEl("path", { class: "feather", opacity: op.toFixed(2), d: `M0 0 Q${len * 0.4} ${-wid} ${len} 0 Q${len * 0.5} ${wid * 0.65} 0 0Z` }),
-      svgEl("path", { class: "feather-spine", d: `M4 0 L${len * 0.9} 0` })
-    );
-    if (hole) {
-      const hx = len * 0.62, rx = wid * 0.9, ry = wid * 0.4;
-      f.append(
-        svgEl("path", { class: "feather-hole", d: `M${hx - rx} 0 Q${hx} ${-ry * 2} ${hx + rx} 0 Q${hx} ${ry * 2} ${hx - rx} 0Z` }),
-        svgEl("circle", { class: "feather-hole-ring", cx: hx, cy: 0, r: ry * 0.75 })
-      );
-    }
-    flap.appendChild(f);
+/* embers drifting up through the title screen */
+const embers = $("[data-embers]");
+if (embers && !reduceMotion && embers.getContext) {
+  const ctx = embers.getContext("2d");
+  let w = 0, h = 0, parts = [];
+  const spawn = (fresh) => ({
+    x: Math.random() * w, y: fresh ? Math.random() * h : h + 10,
+    vy: 0.12 + Math.random() * 0.45, vx: (Math.random() - 0.5) * 0.15,
+    len: Math.random() < 0.6 ? 2 + Math.random() * 7 : 0,          // streak or dot
+    r: 0.5 + Math.random() * 1.1, ph: Math.random() * 6.28, sp: 0.01 + Math.random() * 0.03,
+    hot: Math.random() < 0.7,
+  });
+  const resize = () => {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = embers.clientWidth; h = embers.clientHeight;
+    embers.width = w * dpr; embers.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const n = Math.round(Math.min(110, (w * h) / 16000));
+    while (parts.length < n) parts.push(spawn(true));
+    parts.length = n;
   };
-  const bone = (t) => [150 + 240 * t, -20 - 230 * t + 70 * t * t];
-  for (let i = 14; i >= 0; i--) { const t = i / 14; const [x, y] = bone(t); feather(x, y, 100 - 78 * t, 110 + 250 * t, 15 + 6 * t, 0.62 + 0.38 * t, i % 3 === 1 && t > 0.3); }
-  for (let i = 10; i >= 0; i--) { const t = i / 10; const [x, y] = bone(t * 0.95); feather(x - 4, y - 4, 70 - 50 * t, 60 + 70 * t, 12, 0.95, false); }
-  g.appendChild(flap);
+  const frame = () => {
+    if (!document.body.classList.contains("on-title")) return;     // stops once the world is entered
+    ctx.clearRect(0, 0, w, h);
+    for (const p of parts) {
+      p.y -= p.vy; p.x += p.vx + Math.sin(p.ph) * 0.12; p.ph += p.sp;
+      if (p.y < -12) Object.assign(p, spawn(false));
+      const a = 0.25 + 0.55 * (0.5 + 0.5 * Math.sin(p.ph * 1.7));
+      if (p.len) {
+        ctx.strokeStyle = p.hot ? `rgba(255,140,60,${a})` : `rgba(255,96,80,${a * 0.8})`;
+        ctx.lineWidth = p.r; ctx.beginPath();
+        ctx.moveTo(p.x, p.y); ctx.lineTo(p.x - p.vx * p.len * 4, p.y + p.len); ctx.stroke();
+      } else {
+        ctx.fillStyle = `rgba(255,238,230,${a})`;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 0.8, 0, 6.283); ctx.fill();
+      }
+    }
+    requestAnimationFrame(frame);
+  };
+  resize();
+  window.addEventListener("resize", resize);
+  requestAnimationFrame(frame);
 }
-$$("[data-wing]").forEach(buildWing);
 
-const look = $("[data-look]");
-if (look && finePointer && !reduceMotion) {
-  const sigil = $(".sigil");
+/* the portrait drifts a little with the pointer */
+const artStage = $("[data-art-stage]");
+if (artStage && finePointer && !reduceMotion) {
+  let raf = 0, mx = 0, my = 0;
   window.addEventListener("pointermove", (e) => {
     if (!document.body.classList.contains("on-title")) return;
-    const r = sigil.getBoundingClientRect();
-    const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
-    const d = Math.hypot(dx, dy) || 1, k = Math.min(d / 400, 1);
-    look.style.transform = `translate(${(dx / d) * 48 * k}px, ${(dy / d) * 22 * k}px)`;
+    mx = e.clientX / window.innerWidth - 0.5; my = e.clientY / window.innerHeight - 0.5;
+    if (!raf) raf = requestAnimationFrame(() => { raf = 0; artStage.style.setProperty("--px", `${(-mx * 22).toFixed(1)}px`); artStage.style.setProperty("--py", `${(-my * 14).toFixed(1)}px`); });
   }, { passive: true });
 }
 
@@ -179,7 +225,7 @@ requestAnimationFrame(() => {
 // Ronova's marks scattered over the land: little eyes with star pupils
 [[245, 245], [470, 245], [620, 215], [780, 205], [930, 200], [360, 290]].forEach(([x, y]) => {
   const g = svgEl("g", { transform: `translate(${x} ${y})` });
-  g.append(svgEl("path", { class: "m-mark-lid", d: "M-8 0 Q0 -5.5 8 0 Q0 5.5 -8 0Z" }), svgEl("circle", { class: "m-mark-star", r: 1.6 }));
+  g.append(svgEl("image", { href: "assets/ronova/vector/ronova-watcher.svg", x: -11, y: -5.5, width: 22, height: 11, opacity: 0.85 }));
   mapSvg.appendChild(g);
 });
 
@@ -213,8 +259,10 @@ const poiEls = POIS.map((p) => {
    CAMERA + PLAYER
    ============================================================ */
 const world = $("[data-world]"), camera = $("[data-camera]"), playerEl = $("[data-player]"), playerBody = $(".player__body");
-const player = { x: SPAWN.x, y: SPAWN.y, heading: -90 };
+const player = { x: SPAWN.x, y: SPAWN.y + 24, heading: -90 };   // just south of the square, facing it
 let zoom = 1, cam = { x: 0, y: 0 }, target = null, onArrive = null, flying = false;
+// world3d.js sets this once the 3D world is ready: { camera(snap), click(e), travel(poi, open), home(), zoomBy(f) }
+let view = null;
 const keys = new Set();
 const canHitTest = typeof fogPath.isPointInFill === "function";
 
@@ -232,6 +280,7 @@ function onLand(x, y) {
 }
 
 function placeCamera(snap) {
+  if (view) return view.camera(snap);
   const vw = window.innerWidth, vh = window.innerHeight;
   const sw = MW * zoom, sh = MH * zoom;
   let tx = vw / 2 - player.x * SCALE * zoom;
@@ -263,26 +312,29 @@ window.addEventListener("keydown", (e) => {
   if (KEYMAP[k]) { keys.add(k); target = null; onArrive = null; flying = false; e.preventDefault(); }
   else if (k === "e" || (k === "enter" && e.target === document.body)) { if (nearPoi) { e.preventDefault(); openSection(nearPoi.id); } }
   else if (/^[1-9]$/.test(k) && POIS[+k - 1]) { travelTo(POIS[+k - 1], true); }
-  else if (k === "+" || k === "=") { zoom = Math.min(zoom + 0.1, 1.6); }
-  else if (k === "-") { zoom = Math.max(zoom - 0.1, 0.45); }
+  else if (k === "+" || k === "=") { if (view) view.zoomBy(0.9); else zoom = Math.min(zoom + 0.1, 1.6); }
+  else if (k === "-") { if (view) view.zoomBy(1.1); else zoom = Math.max(zoom - 0.1, 0.45); }
 });
 window.addEventListener("keyup", (e) => keys.delete(e.key.toLowerCase()));
 window.addEventListener("blur", () => keys.clear());
 
 world.addEventListener("click", (e) => {
   if (openPanel) return;
+  if (view) return view.click(e);
   const x = (e.clientX - cam.x) / (SCALE * zoom), y = (e.clientY - cam.y) / (SCALE * zoom);
   if (!onLand(x, y)) return;
   target = { x, y }; onArrive = null; flying = false;
 });
 world.addEventListener("wheel", (e) => {
   e.preventDefault();
+  if (view) return view.zoomBy(e.deltaY > 0 ? 1.08 : 0.92);
   zoom = Math.min(Math.max(zoom * (e.deltaY > 0 ? 0.92 : 1.08), 0.45), 1.6);
 }, { passive: false });
 
 function travelTo(p, open) {
   if (openPanel) closePanel(true);
   if (document.body.classList.contains("on-title")) enterWorld();
+  if (view) return view.travel(p, open);            // 3D: the wisp flies to the island
   const d = Math.hypot(p.x - player.x, p.y - player.y);
   if (d < 26) { if (open) openSection(p.id); return; }
   target = { x: p.x, y: p.y + 16 };
@@ -301,7 +353,7 @@ function updateNear() {
     nearPoi = best;
     poiEls.forEach((el, i) => el.classList.toggle("is-near", POIS[i] === best));
     if (best) { promptText.textContent = `Enter · ${best.short}`; placeEl.textContent = best.place; }
-    else placeEl.textContent = Math.hypot(SPAWN.x - player.x, SPAWN.y - player.y) < 50 ? SPAWN.place : "Snezhnaya";
+    else placeEl.textContent = Math.hypot(SPAWN.x - player.x, SPAWN.y - player.y) < 50 ? SPAWN.place : "Death's Domain";
     prompt.classList.toggle("is-on", !!best && !openPanel);
   }
 }
@@ -311,6 +363,7 @@ let last = 0, looping = false;
 function startLoop() { if (looping) return; looping = true; last = performance.now(); requestAnimationFrame(tick); }
 function tick(t) {
   const dt = Math.min((t - last) / 1000, 0.05); last = t;
+  if (view) { view.camera(reduceMotion); requestAnimationFrame(tick); return; }   // 3D drives itself
   let vx = 0, vy = 0;
   keys.forEach((k) => { vx += KEYMAP[k][0]; vy += KEYMAP[k][1]; });
   let speed = 95;
@@ -354,7 +407,7 @@ POIS.forEach((p, i) => {
   dockBtns[p.id] = b;
 });
 const worldBtn = $("[data-world-btn]");
-worldBtn.addEventListener("click", () => { if (openPanel) closePanel(); });
+worldBtn.addEventListener("click", () => { if (openPanel) closePanel(); else if (view) view.home(); });
 $$("[data-open]").forEach((b) => b.addEventListener("click", () => openSection(b.dataset.open)));
 
 let openPanel = null, lastFocus = null;
@@ -399,8 +452,8 @@ function trapFocus(e) {
   if (e.shiftKey && document.activeElement === first) { e.preventDefault(); lastEl.focus(); }
   else if (!e.shiftKey && document.activeElement === lastEl) { e.preventDefault(); first.focus(); }
 }
-const SECTION_OPEN = { team: () => { loadFrameDetails(); }, amv: () => playTimeline(true), dev: () => loadRepos(), runs: () => refreshRuns() };
-const SECTION_CLOSE = { amv: () => playTimeline(false) };
+const SECTION_OPEN = { team: () => { loadFrameDetails(); }, amv: () => mountReels(true), dev: () => loadRepos(), runs: () => refreshRuns() };
+const SECTION_CLOSE = { amv: () => mountReels(false) };
 
 /* ============================================================
    LIVE: HUAXU PROFILE
@@ -421,7 +474,6 @@ async function loadProfile() {
     setAll("[data-live-guild]", (el) => { el.textContent = p.guildName || "—"; });
     setAll("[data-live-rating]", (el) => { el.textContent = fmt(data.characterRating); });
     setAll("[data-live-owned]", (el) => { el.textContent = data.characters.filter((c) => c.acquired).length; });
-    $("[data-live-levelbar]").style.setProperty("--w", `${Math.min(p.level / 120, 1) * 100}%`);
     if (p.portrait) setAll("[data-live-avatar]", (el) => { el.src = HUAXU.asset(p.portrait); });
     if (p.frame) setAll("[data-live-frame]", (el) => { el.src = HUAXU.asset(p.frame); });
     const badge = $("[data-live-badge]");
@@ -639,41 +691,47 @@ $("[data-retry]").addEventListener("click", () => { deaths++; store.set("lark-de
 $("[data-reset]").addEventListener("click", () => { deaths = 0; store.set("lark-deaths", 0); renderTally(false); say("Ledger cleared. Ronova sighs in relief."); });
 
 /* ============================================================
-   AMV TIMELINE
+   AMV — self-hosted renders (assets/amv/cut-NN.mp4). TikTok's embed player is rate-limited
+   and often shows "Server error" / 429, so it is not used; a missing file falls back to a
+   card that links to the post on TikTok.
    ============================================================ */
-const ruler = $("[data-ruler]");
-for (let i = 0; i <= 40; i++) {
-  const t = document.createElement("i");
-  t.style.left = `${(i / 40) * 100}%`;
-  if (i % 8 === 0) {
-    t.className = "major";
-    if (i < 40) { const lab = document.createElement("span"); lab.style.left = `${(i / 40) * 100}%`; lab.textContent = `00:${String((i / 8) * 6).padStart(2, "0")}`; ruler.appendChild(lab); }
-  }
-  ruler.appendChild(t);
-}
-const wave = $("[data-wave]");
-wave.setAttribute("viewBox", "0 0 160 100");
-let seed = 7;
-const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
-for (let i = 0; i < 160; i++) {
-  const beat = Math.abs(Math.sin(i * 0.39)) ** 3;
-  const h = 8 + (beat * 70 + rnd() * 22) * (0.45 + 0.55 * Math.sin((i / 160) * Math.PI));
-  wave.appendChild(svgEl("rect", { x: i + 0.15, width: 0.7, y: 50 - h / 2, height: h }));
-}
-const tracks = $(".timeline__tracks"), tc = $("[data-tc]");
-let tlRaf = 0, tlStart = 0;
-function setPlayhead(p) {
-  tracks.style.setProperty("--p", p.toFixed(4));
-  const frames = Math.round(p * 900), s = Math.floor(frames / 30), f = frames % 30;
-  tc.textContent = `00:00:${String(s).padStart(2, "0")}:${String(f).padStart(2, "0")}`;
-}
-function playTimeline(on) {
-  cancelAnimationFrame(tlRaf);
-  if (!on) return;
-  if (reduceMotion) { setPlayhead(0.42); return; }
-  tlStart = performance.now();
-  const step = (t) => { setPlayhead(((t - tlStart) / 12000) % 1); tlRaf = requestAnimationFrame(step); };
-  tlRaf = requestAnimationFrame(step);
+const AMVS = ["7697824930443971860", "7694600326791384328", "7658971051820453140"];
+const reelsEl = $("[data-reels]");
+const tiktokUrl = (id) => `https://www.tiktok.com/@larkshinnn/video/${id}`;
+const ARROW = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>`;
+reelsEl.innerHTML = AMVS.map((id, i) => {
+  const n = String(i + 1).padStart(2, "0");
+  return `
+  <figure class="reel">
+    <div class="reel__frame" data-reel="${n}">
+      <a class="reel__fallback" href="${tiktokUrl(id)}" target="_blank" rel="noopener noreferrer">
+        <img src="assets/ronova/title/title-mark.svg" alt="" width="160" height="84" />
+        <span class="reel__fallback-cut">Cut ${n}</span>
+        <span class="reel__fallback-cta">Watch on TikTok ${ARROW}</span>
+      </a>
+    </div>
+    <figcaption class="reel__cap">
+      <span class="reel__num">Cut ${n}</span>
+      <a href="${tiktokUrl(id)}" target="_blank" rel="noopener noreferrer">TikTok ${ARROW}</a>
+    </figcaption>
+  </figure>`;
+}).join("");
+
+// videos load only while the panel is open, and pause on close
+function mountReels(on) {
+  $$("[data-reel]", reelsEl).forEach((frame, i) => {
+    let v = frame.querySelector("video");
+    if (!on) { if (v) v.pause(); return; }
+    if (v || frame.classList.contains("is-missing")) return;
+    v = document.createElement("video");
+    v.src = `assets/amv/cut-${frame.dataset.reel}.mp4#t=0.1`;    // #t shows a frame as the poster
+    v.preload = "metadata"; v.controls = true; v.playsInline = true;
+    v.setAttribute("aria-label", `AMV cut ${i + 1}`);
+    v.addEventListener("loadeddata", () => frame.classList.add("is-loaded"), { once: true });
+    v.addEventListener("error", () => { frame.classList.add("is-missing"); frame.removeChild(v); }, { once: true });
+    v.addEventListener("play", () => $$("video", reelsEl).forEach((o) => o !== v && o.pause()));
+    frame.appendChild(v);
+  });
 }
 
 /* ============================================================
@@ -767,7 +825,10 @@ if (POIS.some((p) => p.id === hashId)) {
   player.x = p.x; player.y = p.y + 16;
   drawPlayer(); placeCamera(true);
   enterWorld(); updateNear(); openSection(hashId);
-} else updateNear();
+} else {
+  updateNear();
+  if (hashId === "map") enterWorld();          // /#map skips the title screen
+}
 
 /* ============================================================
    FALLING FEATHERS AND SNOW
@@ -775,6 +836,8 @@ if (POIS.some((p) => p.id === hashId)) {
 const canvas = $(".feathers");
 if (!reduceMotion && canvas.getContext) {
   const ctx = canvas.getContext("2d");
+  const featherImg = new Image();
+  featherImg.src = "assets/ronova/vector/ronova-feather.png";
   let w, h, items = [], running = true;
   const spawn = (fresh) => {
     const kind = Math.random();
@@ -805,6 +868,14 @@ if (!reduceMotion && canvas.getContext) {
       if (f.snow) {
         ctx.globalAlpha = f.a; ctx.fillStyle = "#dfe8f0";
         ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, 6.283); ctx.fill();
+        continue;
+      }
+      if (featherImg.complete && featherImg.naturalWidth) {   // Ronova's wing blade, drawn in VectorCraft
+        const fh = f.len * 2.4, fw = fh / 2;
+        ctx.globalAlpha = Math.min(1, f.a + (f.red ? 0.35 : 0.15));
+        ctx.save(); ctx.translate(f.x, f.y); ctx.rotate(f.rot);
+        ctx.drawImage(featherImg, -fw / 2, -fh / 2, fw, fh);
+        ctx.restore();
         continue;
       }
       const col = f.red ? "194,66,83" : "120,112,128";

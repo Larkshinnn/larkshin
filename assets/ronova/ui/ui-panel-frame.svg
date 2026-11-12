@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="256" height="256" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="linear-gradient-1" x1="20" y1="20" x2="62" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6e0b19"/>
+      <stop offset="1" stop-color="#ff5a5f"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="236" y1="20" x2="194" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6e0b19"/>
+      <stop offset="1" stop-color="#ff5a5f"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-3" x1="20" y1="236" x2="62" y2="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6e0b19"/>
+      <stop offset="1" stop-color="#ff5a5f"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-4" x1="236" y1="236" x2="194" y2="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6e0b19"/>
+      <stop offset="1" stop-color="#ff5a5f"/>
+    </linearGradient>
+  </defs>
+  <title>ui-panel-frame</title>
+  <g id="Layer_1" data-name="Layer 1">
+    <rect x="10" y="10" width="236" height="236" fill="none" stroke="#c1202f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="17" y="17" width="222" height="222" fill="none" stroke="#f6e6e2" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+    <polygon points="30,10 42,10 50,1.5 40,7" fill="#c1202f"/>
+    <polygon points="10,30 10,42 1.5,50 7,40" fill="#c1202f"/>
+    <path d="M40 26 C46.33 29.33 54.33 35 58 40 C61.67 45 63.33 54 62 56 C60.67 58 54.67 54.67 50 52 C45.33 49.33 39 45.33 34 40 C29 34.67 19 22.33 20 20 C21 17.67 33.67 22.67 40 26 Z" fill="url(#linear-gradient-1)" stroke="#14030a" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="12,1 23,12 12,23 1,12" fill="#33050c" stroke="#c1202f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="12,7 17,12 12,17 7,12" fill="#f6e6e2"/>
+    <polygon points="226,10 214,10 206,1.5 216,7" fill="#c1202f"/>
+    <polygon points="246,30 246,42 254.5,50 249,40" fill="#c1202f"/>
+    <path d="M216 26 C209.67 29.33 201.67 35 198 40 C194.33 45 192.67 54 194 56 C195.33 58 201.33 54.67 206 52 C210.67 49.33 217 45.33 222 40 C227 34.67 237 22.33 236 20 C235 17.67 222.33 22.67 216 26 Z" fill="url(#linear-gradient-2)" stroke="#14030a" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="244,1 255,12 244,23 233,12" fill="#33050c" stroke="#c1202f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="244,7 249,12 244,17 239,12" fill="#f6e6e2"/>
+    <polygon points="30,246 42,246 50,254.5 40,249" fill="#c1202f"/>
+    <polygon points="10,226 10,214 1.5,206 7,216" fill="#c1202f"/>
+    <path d="M40 230 C46.33 226.67 54.33 221 58 216 C61.67 211 63.33 202 62 200 C60.67 198 54.67 201.33 50 204 C45.33 206.67 39 210.67 34 216 C29 221.33 19 233.67 20 236 C21 238.33 33.67 233.33 40 230 Z" fill="url(#linear-gradient-3)" stroke="#14030a" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="12,233 23,244 12,255 1,244" fill="#33050c" stroke="#c1202f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="12,239 17,244 12,249 7,244" fill="#f6e6e2"/>
+    <polygon points="226,246 214,246 206,254.5 216,249" fill="#c1202f"/>
+    <polygon points="246,226 246,214 254.5,206 249,216" fill="#c1202f"/>
+    <path d="M216 230 C209.67 226.67 201.67 221 198 216 C194.33 211 192.67 202 194 200 C195.33 198 201.33 201.33 206 204 C210.67 206.67 217 210.67 222 216 C227 221.33 237 233.67 236 236 C235 238.33 222.33 233.33 216 230 Z" fill="url(#linear-gradient-4)" stroke="#14030a" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="244,233 255,244 244,255 233,244" fill="#33050c" stroke="#c1202f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="244,239 249,244 244,249 239,244" fill="#f6e6e2"/>
+  </g>
+</svg>

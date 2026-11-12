@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="linear-gradient-1" x1="164" y1="50" x2="164" y2="452" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff5a5f"/>
+      <stop offset="0.55" stop-color="#c1202f"/>
+      <stop offset="1" stop-color="#6e0b19"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="164" y1="256" x2="164" y2="340" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#e7c2bd"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-3" x1="348" y1="50" x2="348" y2="452" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff5a5f"/>
+      <stop offset="0.55" stop-color="#c1202f"/>
+      <stop offset="1" stop-color="#6e0b19"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-4" x1="348" y1="256" x2="348" y2="340" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#e7c2bd"/>
+    </linearGradient>
+  </defs>
+  <title>ronova-ornament</title>
+  <g id="Layer_1" data-name="Layer 1">
+    <path d="M145.75 94.72 C130.02 116.91 111.45 149.04 99.79 175.17 C88.14 201.3 80.15 224.33 75.82 251.52 C71.49 278.71 70.86 311.13 73.81 338.33 C76.76 365.53 86.3 396.35 93.52 414.72 C100.74 433.09 107.45 449.58 117.11 448.53 C126.78 447.49 140.16 427.4 151.49 408.46 C162.82 389.51 176.45 360.13 185.08 334.87 C193.71 309.6 199.18 284.47 203.28 256.86 C207.39 229.26 209.48 196.57 209.69 169.23 C209.9 141.9 207.13 114.06 204.54 92.85 C201.95 71.65 203.95 41.71 194.15 42.02 C184.35 42.33 161.47 72.53 145.75 94.72 Z" fill="url(#linear-gradient-1)" stroke="#14030a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M150.12 123.02 C138.01 141.05 123.88 166.13 114.89 187.82 C105.89 209.52 99.6 230.25 96.15 253.19 C92.69 276.12 92.16 303.37 94.15 325.44 C96.15 347.51 103.18 371.37 108.11 385.62 C113.04 399.86 117.24 411.81 123.74 410.9 C130.25 409.99 139.19 394.53 147.12 380.16 C155.06 365.79 164.83 345.01 171.35 324.69 C177.87 304.36 182.52 282.12 186.25 258.22 C189.98 234.32 192.94 204.65 193.74 181.3 C194.54 157.95 192.09 135.06 191.05 118.12 C190.02 101.17 194.34 78.83 187.52 79.65 C180.7 80.47 162.22 104.99 150.12 123.02 Z" fill="none" stroke="#ff9a9a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"/>
+    <polygon points="170.06,234.85 115.08,281.5 135.33,355.97 191.98,303.55" fill="#33050c" stroke="#14030a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="164,256 129.9,287.84 141.4,334.82 176.04,301.07" fill="url(#linear-gradient-2)"/>
+    <polygon points="156.83,280.99 144.73,294.17 148.01,311.75 160.11,298.58" fill="#c1202f"/>
+    <path d="M448.94 128.9 C450.52 156.05 449.25 193.14 445.28 221.48 C441.32 249.82 435.89 273.57 425.16 298.93 C414.42 324.29 397.77 352.11 380.85 373.61 C363.94 395.12 339.51 416.2 323.66 427.95 C307.81 439.7 293.37 450.13 285.73 444.12 C278.09 438.12 277.38 413.99 277.82 391.92 C278.25 369.85 282.26 337.71 288.33 311.71 C294.4 285.71 303.08 261.5 314.23 235.91 C325.38 210.33 340.93 181.5 355.24 158.21 C369.54 134.91 386.64 112.77 400.07 96.16 C413.51 79.55 427.68 53.1 435.82 58.56 C443.97 64.02 447.37 101.75 448.94 128.9 Z" fill="url(#linear-gradient-3)" stroke="#14030a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M430.24 150.59 C430.95 172.29 429.64 201.04 425.78 224.21 C421.91 247.37 416.26 268.29 407.03 289.57 C397.81 310.85 383.82 334.24 370.44 351.9 C357.05 369.56 338.44 386.07 326.71 395.54 C314.98 405 305.09 412.92 300.05 408.7 C295.02 404.48 295.63 386.63 296.52 370.23 C297.4 353.84 300.13 331.04 305.37 310.35 C310.61 289.66 318.46 268.33 327.95 246.09 C337.45 223.85 350.67 197.12 362.36 176.89 C374.06 156.67 388.27 138.55 398.12 124.73 C407.98 110.91 416.15 89.68 421.5 93.98 C426.86 98.29 429.53 128.88 430.24 150.59 Z" fill="none" stroke="#ff9a9a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"/>
+    <polygon points="354.06,234.85 375.98,303.55 319.33,355.97 299.08,281.5" fill="#33050c" stroke="#14030a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="348,256 360.04,301.07 325.4,334.82 313.9,287.84" fill="url(#linear-gradient-4)"/>
+    <polygon points="340.83,280.99 344.11,298.58 332.01,311.75 328.73,294.17" fill="#c1202f"/>
+  </g>
+</svg>

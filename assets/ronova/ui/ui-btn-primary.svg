@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="240" height="72" viewBox="0 0 240 72">
+  <defs>
+    <linearGradient id="linear-gradient-1" x1="120" y1="4" x2="120" y2="68" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e23a4b"/>
+      <stop offset="0.55" stop-color="#c1202f"/>
+      <stop offset="1" stop-color="#7d0d1c"/>
+    </linearGradient>
+  </defs>
+  <title>ui-btn-primary</title>
+  <g id="Layer_1" data-name="Layer 1">
+    <polygon points="3,36 30,4 210,4 237,36 210,68 30,68" fill="url(#linear-gradient-1)" stroke="#ff8f8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="13,36 34,11 206,11 227,36 206,61 34,61" fill="none" stroke="#ffd0cc" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+    <polygon points="18,28 23,36 18,44 13,36" fill="#f6e6e2"/>
+    <polygon points="222,28 227,36 222,44 217,36" fill="#f6e6e2"/>
+  </g>
+</svg>
